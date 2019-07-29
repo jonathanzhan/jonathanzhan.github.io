@@ -2,27 +2,27 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>centos_7自动以root身份登录gnome桌面 - whatlookingfor</title>
+<title>Webpack配置介绍 - whatlookingfor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="本文主要介绍在contos7下，如何以root身份登录gnome桌面">
-<meta name="keywords" content="linux">
+    <meta name="description" content="webpack.config.js为webpack的默认配置,我们可以为开发环境和生产环境分别做不同的配置.下面一一介绍每个配置的作用">
+<meta name="keywords" content="node">
 <meta property="og:type" content="article">
-<meta property="og:title" content="centos_7自动以root身份登录gnome桌面">
-<meta property="og:url" content="http://jonathanchang.top/2016/08/29/centos-7自动以root身份登录gnome桌面/index.html">
+<meta property="og:title" content="Webpack配置介绍">
+<meta property="og:url" content="http://jonathanchang.top/2019/03/05/webpack配置介绍/index.html">
 <meta property="og:site_name" content="whatlookingfor">
-<meta property="og:description" content="本文主要介绍在contos7下，如何以root身份登录gnome桌面">
+<meta property="og:description" content="webpack.config.js为webpack的默认配置,我们可以为开发环境和生产环境分别做不同的配置.下面一一介绍每个配置的作用">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-10T04:17:10.195Z">
+<meta property="og:updated_time" content="2019-07-29T06:47:31.004Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="centos_7自动以root身份登录gnome桌面">
-<meta name="twitter:description" content="本文主要介绍在contos7下，如何以root身份登录gnome桌面">
+<meta name="twitter:title" content="Webpack配置介绍">
+<meta name="twitter:description" content="webpack.config.js为webpack的默认配置,我们可以为开发环境和生产环境分别做不同的配置.下面一一介绍每个配置的作用">
 
 
 
-<link rel="alternative" href="/atom.xml" title="centos_7自动以root身份登录gnome桌面" type="application/atom+xml">
+<link rel="alternative" href="/atom.xml" title="Webpack配置介绍" type="application/atom+xml">
 
 
 
@@ -90,7 +90,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="centos_7自动以root身份登录gnome桌面" height="28">
+                <img src="/images/logo.png" alt="Webpack配置介绍" height="28">
             
             </a>
         </div>
@@ -141,17 +141,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2016-08-29T09:10:38.000Z">2016-08-29</time>
+                <time class="level-item has-text-grey" datetime="2019-03-05T11:22:43.000Z">2019-03-05</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/运维实施/">运维实施</a>
+                <a class="has-link-grey -link" href="/categories/前端设计/">前端设计</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 542 个字)
+                    16 分钟 读完 (大约 2370 个字)
                 </span>
                 
             </div>
@@ -159,34 +159,88 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                centos_7自动以root身份登录gnome桌面
+                Webpack配置介绍
             
         </h1>
         <div class="content">
-            <p>本文主要介绍在contos7下，如何以root身份登录gnome桌面</p>
+            <p>webpack.config.js为webpack的默认配置,我们可以为开发环境和生产环境分别做不同的配置.下面一一介绍每个配置的作用</p>
 <a id="more"></a>
-<h2 id="CentOS-7自动以root身份登录gnome桌面"><a href="#CentOS-7自动以root身份登录gnome桌面" class="headerlink" title="CentOS 7自动以root身份登录gnome桌面"></a>CentOS 7自动以root身份登录gnome桌面</h2><p>刚刚在虚拟机中成功的安装上了CentOS 7 64位，发现在登录gnome桌面时必须创建一个普通用户，否则不让登录。</p>
-<p>重启CentOS发现下方藏有一个使用其他用户登录选项，可以输入用户名使用root登录。</p>
-<h3 id="1-配置root自动登录gnome"><a href="#1-配置root自动登录gnome" class="headerlink" title="1. 配置root自动登录gnome"></a>1. 配置root自动登录gnome</h3><p>在配置的时候会遇到GDM：</p>
-<p>GDM是什么？</p>
-<blockquote>
-<p>GDM (The GNOME Display Manager)是GNOME显示环境的管理器，并被用来替代原来的X Display Manager。与其竞争者(X3DM,KDM,WDM)不同，GDM是完全重写的，并不包含任何XDM的代码。GDM可以运行并管理本地和远程登录的X服务器(通过XDMCP)。</p>
-<p>gdm仅仅是一个脚本，实际上是通过他来运行GDM二进制可执行文件。</p>
-<p>gdm-stop是用来迅速终止当前正在运行的gdm守护进程的一个脚本。</p>
-<p>gdm-restart脚本将迅速重启当前守护进程。</p>
-<p>gdm-safe-restart会当所有人都注销后再重启。</p>
-<p>gdmsetup是一种可以很简单的修改多数常用选项的图形化界面工具。</p>
-</blockquote>
-<p>百度上搜到的都是RHEL、CentOS 6的配置方法，并不适用于CentOS 7</p>
-<blockquote>
-<p>在CentOS 6较新版本的Linux发行版中预设不允许以root账号登入gnome图形用户桌面，因此一般使用者登入后，可以在终端机以su root，暂时取得root权限；</p>
-<p>如果一定要以root登入图形界面，可以修改/etc/pam.d/gdm以及 /etc/pam.d/gdm-passwd，把这行auth required pam_succeed_if.so user != root quiet加上#注释掉，保存后就可以用root账号了。</p>
-</blockquote>
-<p>对于CentOS 7的用户,简单来说就是：vi /etc/gdm/custom.conf</p>
-<p>然后在[daemon]下面添加：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[daemon]</span><br><span class="line">AutomaticLoginEnable=True</span><br><span class="line">AutomaticLogin=root  #你想自动登录的用户名</span><br></pre></td></tr></table></figure>
+<h3 id="webpack配置"><a href="#webpack配置" class="headerlink" title="webpack配置"></a>webpack配置</h3><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span><br><span class="line"><span class="hljs-keyword">var</span> webpack = <span class="hljs-built_in">require</span>(<span class="hljs-string">'webpack'</span>)</span><br><span class="line"><span class="hljs-keyword">var</span> HtmlWebpackPlugin = <span class="hljs-built_in">require</span>(<span class="hljs-string">'html-webpack-plugin'</span>)</span><br><span class="line"><span class="hljs-built_in">module</span>.exports = &#123;</span><br><span class="line">  entry: &#123;</span><br><span class="line">    app: <span class="hljs-string">'./src/main.js'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  output: &#123;</span><br><span class="line">    path: path.resolve(__dirname, <span class="hljs-string">'./dist'</span>),</span><br><span class="line">    publicPath: <span class="hljs-string">''</span>,</span><br><span class="line">    filename: <span class="hljs-string">'[name].js'</span></span><br><span class="line">  &#125;,</span><br><span class="line">  resolve: &#123;</span><br><span class="line">    extensions: [<span class="hljs-string">''</span>, <span class="hljs-string">'.js'</span>, <span class="hljs-string">'.jsx'</span>, <span class="hljs-string">'.json'</span>],</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="hljs-string">'src'</span>: path.resolve(__dirname, <span class="hljs-string">'./src'</span>),</span><br><span class="line">      <span class="hljs-string">'assets'</span>: path.resolve(__dirname, <span class="hljs-string">'./src/assets'</span>),</span><br><span class="line">      <span class="hljs-string">'components'</span>: path.resolve(__dirname, <span class="hljs-string">'./src/components'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">    loaders: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.js|jsx?$/</span>,</span><br><span class="line">        exclude: <span class="hljs-regexp">/node_modules/</span>,</span><br><span class="line">        loader: <span class="hljs-string">'babel'</span>,</span><br><span class="line">        query: &#123;</span><br><span class="line">          presets: [<span class="hljs-string">'es2015'</span>, <span class="hljs-string">'react'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.css$/</span>,</span><br><span class="line">        loader: <span class="hljs-string">'style!css'</span>,</span><br><span class="line">        exclude: <span class="hljs-regexp">/node_modules/</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.(png|jpe?g|gif|svg)(\?.*)?$/</span>,</span><br><span class="line">        loader: <span class="hljs-string">'url'</span>,</span><br><span class="line">        query: &#123;</span><br><span class="line">          limit: <span class="hljs-number">10000</span>,</span><br><span class="line">          name: path.join(<span class="hljs-string">'static'</span>, <span class="hljs-string">'img/[name].[hash:7].[ext]'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;,</span><br><span class="line">  plugins: [</span><br><span class="line">    <span class="hljs-keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">      filename: <span class="hljs-string">'index.html'</span>,</span><br><span class="line">      template: <span class="hljs-string">'index.html'</span>,</span><br><span class="line">      inject: <span class="hljs-literal">true</span></span><br><span class="line">    &#125;),</span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>保存并重启，重启的时候已经以root用户登录了。</p>
+<h3 id="entry"><a href="#entry" class="headerlink" title="entry"></a>entry</h3><p><code>entry</code>是入口配置项,可以说<code>string</code>,<code>Array</code>或者一个<code>Object</code></p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">entry: &#123;</span><br><span class="line">  app: <span class="hljs-string">'./src/main.js'</span></span><br><span class="line">&#125;</span><br><span class="line">entry: <span class="hljs-string">'./src/main.js'</span></span><br><span class="line"><span class="hljs-comment">//如果页面有多个入口可以这样写:</span></span><br><span class="line">entry: [<span class="hljs-string">'./src/home.js'</span>, <span class="hljs-string">'.src/profile.js'</span>]</span><br><span class="line"><span class="hljs-comment">//或</span></span><br><span class="line">entry: &#123;</span><br><span class="line">  home: <span class="hljs-string">'./src/home.js'</span>,</span><br><span class="line">  profile: <span class="hljs-string">'./src/profile.js'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="output"><a href="#output" class="headerlink" title="output"></a>output</h3><p><code>output</code>是输出配置</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">  path: path.resolve(__dirname, <span class="hljs-string">'./dist'</span>),</span><br><span class="line">  publicPath: <span class="hljs-string">'/'</span>,</span><br><span class="line">  filename: <span class="hljs-string">'[name].js'</span>,</span><br><span class="line">  chunkFilename: <span class="hljs-string">'[id].[hash].js'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>path是文件输出到本地的路径，publicPath是文件的引用路径，可用来被一些Webpack插件用来处理CSS，HTML文件中的URL，一般用于生产模式，filename是打包后的入口文件名，chunkFilename是每个模块编译后的文件名，其中[hash]是用来唯一标识文件，主要用来防止缓存。</p>
+<h4 id="path"><a href="#path" class="headerlink" title="path"></a>path</h4><p>path仅仅用来告诉webpack在哪里存放结果文件。上面的例子中,最终的打包文件会放到与当前脚本文件同级目录的dist目录下</p>
+<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hello-webpack</span><br><span class="line">  +dist</span><br><span class="line">  -webpack.config.js</span><br></pre></td></tr></table></figure>
+
+<h4 id="publicPath"><a href="#publicPath" class="headerlink" title="publicPath"></a>publicPath</h4><p>文件的引用路径，可用来被一些Webpack插件用来处理CSS，HTML文件中的URL，在开发模式下建议使用相对路径，在生产模式中，如果你的资源文件放在别的服务器上，可以使用服务器的地址。当然你也可以不用配置<code>publicPath</code>，。<br>在项目中我使用了<code>url-loader</code>加载图片</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">    test: <span class="hljs-regexp">/\.(png|jpe?g|gif|svg)(\?.*)?$/</span>,</span><br><span class="line">    loader: <span class="hljs-string">'url'</span>,</span><br><span class="line">    query: &#123;</span><br><span class="line">      limit: <span class="hljs-number">10000</span>,</span><br><span class="line">      name: path.join('static', 'img/[name].[hash:7].[ext]') # 图片最终的输出路径</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在<code>main.js</code>中使用了图片</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> Girl <span class="hljs-keyword">from</span> <span class="hljs-string">'assets/img/girl.jpg'</span></span><br></pre></td></tr></table></figure>
+
+<p>那么最终浏览器访问图片的路径就是<br><code>static/img/girl.7672e53.jpg</code></p>
+<p>所以可以根据开发环境和生产环境配置不同的<code>publicPath</code>。
+在生产环境中，由于我的资源文件放在项目目录下，所以可以这样配置<code>output</code>:</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">output: &#123;</span><br><span class="line">  path: path.resolve(__dirname, <span class="hljs-string">'./dist'</span>),</span><br><span class="line">  publicPath: <span class="hljs-string">'./'</span>,</span><br><span class="line">  filename: <span class="hljs-string">'js/[name].[chunkhash].js'</span>,</span><br><span class="line">  chunkFilename: <span class="hljs-string">`js/[id].[chunkhash].js`</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="filename"><a href="#filename" class="headerlink" title="filename"></a>filename</h4><p>入口文件打包后的名称，<code>[name]</code>对应着入口文件的key值,例如<code>app.js</code>，这对多入口文件是很有用的，因为入口文件可以有多个,但是<code>filename</code>只能有一个</p>
+<h4 id="chunkFilename"><a href="#chunkFilename" class="headerlink" title="chunkFilename"></a>chunkFilename</h4><p>非入口文件打包后的名称,未被列在entry中,却又需要被打包出来的文件的命名配置规则。</p>
+<h3 id="loader"><a href="#loader" class="headerlink" title="loader"></a>loader</h3><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">    loaders: [</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.js|jsx?$/</span>,</span><br><span class="line">        exclude: <span class="hljs-regexp">/node_modules/</span>,</span><br><span class="line">        loader: <span class="hljs-string">'babel'</span>,</span><br><span class="line">        query: &#123;</span><br><span class="line">          presets: [<span class="hljs-string">'es2015'</span>, <span class="hljs-string">'react'</span>]</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.css$/</span>,</span><br><span class="line">        loader: <span class="hljs-string">'style!css'</span>,</span><br><span class="line">        exclude: <span class="hljs-regexp">/node_modules/</span></span><br><span class="line">      &#125;,</span><br><span class="line">      &#123;</span><br><span class="line">        test: <span class="hljs-regexp">/\.(png|jpe?g|gif|svg)(\?.*)?$/</span>,</span><br><span class="line">        loader: <span class="hljs-string">'url'</span>,</span><br><span class="line">        query: &#123;</span><br><span class="line">          limit: <span class="hljs-number">10000</span>,</span><br><span class="line">          name: path.join(<span class="hljs-string">'static'</span>, <span class="hljs-string">'img/[name].[hash:7].[ext]'</span>)</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p>由于webpack本身只能处理javascript模块,如果要处理其他类型的文件,就需要使用loader进行转换。Loader可以理解为是模块和资源的转换器,他本身是一个函数,接受源文件作为参数,返回转换的结果。不同的loader可以将各种类型的文件转换为浏览器能够接受的格式如JS,Stylesheets等。</p>
+<ul>
+<li><code>test</code> 参数用来指示当前配置项针对哪些资源,当参数匹配时，就是使用对应的loader.</li>
+<li><code>exclude</code> 参数用来剔除需要忽略的资源。</li>
+<li><code>include</code> 参数用来表示本loader配置仅针对哪些目录文件，从名称上就可以认为跟<code>exclude</code>作用相反。</li>
+<li><code>loader/loaders</code>参数,用来指示用哪个/哪些loader来处理目标资源,这俩表达的其实是一个意思，只是写法不同，在webpack2中loaders被替换成了rules,其实就是loaders规则<h3 id="plugin"><a href="#plugin" class="headerlink" title="plugin"></a>plugin</h3>插件可以完成更多loader不能完成的功能。<br>插件的使用一般是在webpack的配置信息plugins选项中指定。<br>loader是在打包前或打包过程中作用于单个文件。plugin通常在打包过程结束后，作用于包或者chunk级别。<br>以下是一些常用的插件</li>
+</ul>
+<h4 id="extract-text-webpack-plugin"><a href="#extract-text-webpack-plugin" class="headerlink" title="extract-text-webpack-plugin"></a>extract-text-webpack-plugin</h4><p>ExtractTextPlugin的作用是把各个chunk加载的css代码合并成一个css文件并在页面加载的时候以<code>&lt;link&gt;</code>的形式进行加载。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> ExtractTextPlugin = <span class="hljs-built_in">require</span>(<span class="hljs-string">'extract-text-webpack-plugin'</span>)</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">module</span>: &#123;</span><br><span class="line">  loaders: [</span><br><span class="line">    &#123;</span><br><span class="line">      test: <span class="hljs-regexp">/\.css$/</span>, </span><br><span class="line">      loader:ExtractTextPlugin.extract(<span class="hljs-string">"style-loader"</span>,<span class="hljs-string">"css-loader"</span>) &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;,</span><br><span class="line">plugins: [</span><br><span class="line">  <span class="hljs-keyword">new</span> ExtractTextPlugin(path.join(<span class="hljs-string">'static'</span>, <span class="hljs-string">'css/[name].[contenthash].css'</span>))</span><br><span class="line">]</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>注意：如果想要把CSS放到HTML的style标签中，可以不使用extract-text-webpack-plugin，只要用css-loader和style-loader就可以了。</p>
+</blockquote>
+<h4 id="html-webpack-plugin"><a href="#html-webpack-plugin" class="headerlink" title="html-webpack-plugin"></a>html-webpack-plugin</h4><p>html-webpack-plugin，是用来生产html的，其中filename是生产的文件路径和名称，template是使用的模板，inject是指将js放在body还是head里。为true会将js放到body里</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> HtmlWebpackPlugin(&#123;</span><br><span class="line">    filename: <span class="hljs-string">'index.html'</span>,</span><br><span class="line">    template: <span class="hljs-string">'index.html'</span>,</span><br><span class="line">    inject: <span class="hljs-literal">true</span></span><br><span class="line">  &#125;),</span><br></pre></td></tr></table></figure>
+
+<h4 id="uglifyJSPlugin"><a href="#uglifyJSPlugin" class="headerlink" title="uglifyJSPlugin"></a>uglifyJSPlugin</h4><p>uglifyJSPlugin是将代码进行压缩的。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> webpack.optimize.UglifyJsPlugin(&#123;</span><br><span class="line">  compress: &#123;</span><br><span class="line">    warnings: <span class="hljs-literal">false</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<h4 id="CommonsChunkPlugin"><a href="#CommonsChunkPlugin" class="headerlink" title="CommonsChunkPlugin"></a>CommonsChunkPlugin</h4><p>CommonsChunkPlugin是将多个入口文件之间共享的块打包成一个独立的js文件。至此，你只需要在每个页面都加载这个公共代码的js文件，就可以既保持代码的完整性，又不会重复下载公共代码了。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> webpack.optimize.CommonsChunkPlugin(&#123;</span><br><span class="line">    name: <span class="hljs-string">'vendor'</span>,</span><br><span class="line">    filename: <span class="hljs-string">'[name].[chunkhash].js'</span>,</span><br><span class="line">    minChunks: <span class="hljs-number">4</span></span><br><span class="line">  &#125;)</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>name</code>，给这个包含公共代码的chunk命个名（唯一标识）。</li>
+<li><code>filename</code>，如何命名打包后生产的js文件。</li>
+<li><code>minChunks</code>，公共代码的判断标准：某个js模块被多少个chunk加载了才算是公共代码。</li>
+<li><code>chunks</code>，表示需要在哪些chunk（也可以理解为webpack配置中entry的每一项）里寻找公共代码进行打包。不设置此参数则默认提取范围为所有的chunk。</li>
+</ul>
+<h3 id="resolve"><a href="#resolve" class="headerlink" title="resolve"></a>resolve</h3><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">resolve: &#123;</span><br><span class="line">    extensions: [<span class="hljs-string">''</span>, <span class="hljs-string">'.js'</span>, <span class="hljs-string">'.jsx'</span>, <span class="hljs-string">'.json'</span>],</span><br><span class="line">    alias: &#123;</span><br><span class="line">      <span class="hljs-string">'src'</span>: path.resolve(__dirname, <span class="hljs-string">'./src'</span>),</span><br><span class="line">      <span class="hljs-string">'assets'</span>: path.resolve(__dirname, <span class="hljs-string">'./src/assets'</span>),</span><br><span class="line">      <span class="hljs-string">'components'</span>: path.resolve(__dirname, <span class="hljs-string">'./src/components'</span>)</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br></pre></td></tr></table></figure>
+
+<p><code>esolve.extensions</code>是对模块后缀名的简写，配置后，原本是<code>require(&#39;./components/app.jsx&#39;)</code> 可以简写为<code>require(&#39;./components/app&#39;)</code></p>
+<p><code>resolve.alias</code>是别名，配置后，比如原本是<code>require(&#39;./src/components/nav.jsx&#39;)</code>可以简写为<code>require(&#39;components/nav.jsx&#39;)</code>。</p>
+<h3 id="Webpack中的hash与chunkhash"><a href="#Webpack中的hash与chunkhash" class="headerlink" title="Webpack中的hash与chunkhash"></a>Webpack中的hash与chunkhash</h3><h4 id="hash与chunkhash"><a href="#hash与chunkhash" class="headerlink" title="hash与chunkhash"></a>hash与chunkhash</h4><p>按照官方的定义<code>hash</code>就是webpack的每一次编译(compilation)所产生的hash值，<code>chunkhash</code>从字面上理解就是每一个chunk的hash值。那么什么时候会产生编译以及chunk又是什么东西？</p>
+<h4 id="compilation"><a href="#compilation" class="headerlink" title="compilation"></a>compilation</h4><p><code>compilation</code>对象代表某个版本的资源对应的编译进程。当使用Webpack的development中间件时，每次检测到项目文件有改动就会创建一个compilation，进而能够针对改动生产全新的编译文件。以及在每次执行<code>webpack</code>命令时都会创建一个compilation。也就是说当创建了一个compilation，我们所有需要打包的文件(js,css,img,font等)都会产生相同的hash。<br>如果在项目中我们使用hash作为编译输出文件的hash的话，像这样：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">entry: &#123;</span><br><span class="line">    home: <span class="hljs-string">'./src/home.js'</span>,</span><br><span class="line">    profile: <span class="hljs-string">'./src/profile.js'</span></span><br><span class="line">&#125;,</span><br><span class="line">output: &#123;</span><br><span class="line">    path: <span class="hljs-string">'./dist'</span>,</span><br><span class="line">    filename: <span class="hljs-string">'js/[name].[hash].js'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>那么在编译后所有的文件名都会使用相同的hash值，这样带来的问题是，上面两个js文件任何一个改动都会影响另外文件的最终文件名。上线后，另外文件的浏览器缓存也全部失效。这肯定不是我们想要的结果。</p>
+<p>那么如何避免这样的问题呢？</p>
+<p>答案就是使用<code>chunkhash</code>。
+按照上面所说，<code>chunkhash</code>是每一个<code>chunk</code>的<code>hash</code>值，<code>chunk</code>就是模块(webpack中一切皆模块)，<code>chunkhash</code>也就是根据模块内容计算出的<code>hash</code>值。所以某个文件的改动只会影响它本身的<code>hash</code>值，不会影响其他文件。<br>所以可以将上面的filename改为：</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">filename: <span class="hljs-string">'js/[name].[chunkhash].js'</span></span><br></pre></td></tr></table></figure>
+
+<p>这样的话每个文件的hash值都不相同，上线后无改动的文件不会失去缓存。<br>不过使用<code>chunkhash</code>也不能解决所有问题，比如打包css文件。</p>
+<h4 id="js与css共用相同chunkhash的解决方案"><a href="#js与css共用相同chunkhash的解决方案" class="headerlink" title="js与css共用相同chunkhash的解决方案"></a>js与css共用相同chunkhash的解决方案</h4><p>前文提到了webpack的编译理念，webpack将style视为js的一部分，所以在计算<code>chunkhash</code>时，会把所有的js代码和style代码混合在一起计算。所以，不论是修改了js代码还是css代码，整个chunk的内容都改变了，计算所得的chunkhash自然就一样了。</p>
+<p>那么如何解决这种问题呢？</p>
+<h4 id="contenthash"><a href="#contenthash" class="headerlink" title="contenthash"></a>contenthash</h4><p>webpack默认将js/style文件统统编译到一个js文件中，可以借助<code>extract-text-webpack-plugin</code>将style文件单独编译输出。所以我们可以这样配置:</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> ExtractTextPlugin(<span class="hljs-string">'./dist/css/[name].[contenthash].css'</span>)</span><br></pre></td></tr></table></figure>
+
+<p><code>contenthash</code>代表的是文本文件内容的hash值，也就是只有style文件的hash值。这样编译输出的js和css文件将会有其独立的hash值。</p>
 
         </div>
         
@@ -194,7 +248,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/linux/">linux</a>
+                    <a class="has-link-grey -link" href="/tags/node/">node</a>
                 </div>
             </div>
         </div>
@@ -216,16 +270,16 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/08/30/centos7下安装oracle11gR2/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/12/git常用命令收集与git-flow简介/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">centos7下安装oracle11gR2</span>
+                <span class="level-item">git常用命令收集与git-flow简介</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2016/08/25/ubuntu下防火墙端口号的设置/">
-                <span class="level-item">ubuntu下防火墙端口号的设置</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/03/05/node中的path模块常用介绍/">
+                <span class="level-item">node中的path模块常用介绍</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -246,7 +300,7 @@
     var gitalk = new Gitalk({
         clientID: '422042c69d84f3ef6d0d',
         clientSecret: '053297d6d21b8963844801733df8e21c64adbae0',
-        id: '6a57188405502c062489803488aa2419',
+        id: '9729302ff591abeafc741b2a16a891a7',
         repo: 'jonathanzhan.github.io',
         owner: 'jonathanzhan',
         admin: "jonathanzhan"
@@ -1602,7 +1656,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!--<a class="footer-logo is-block has-mb-6" href="/">-->
                 <!---->
-                    <!--<img src="/images/logo.png" alt="centos_7自动以root身份登录gnome桌面" height="28">-->
+                    <!--<img src="/images/logo.png" alt="Webpack配置介绍" height="28">-->
                 <!---->
                 <!--</a>-->
                 <p class="is-size-7">

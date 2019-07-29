@@ -2,27 +2,27 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>centos_7自动以root身份登录gnome桌面 - whatlookingfor</title>
+<title>node中的path模块常用介绍 - whatlookingfor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="本文主要介绍在contos7下，如何以root身份登录gnome桌面">
-<meta name="keywords" content="linux">
+    <meta name="description" content="对于前端开发的同学相信大家都会用过path这个模块去解析路径，比较遗憾的是，以往都只是百度其某个方法的用法，没有完整的去看过接口文档，导致现在阅读一些代码的时候碰到path的其他方法一脸懵逼，所以趁着项目不忙去看了一下官方文档并做个笔记。">
+<meta name="keywords" content="node">
 <meta property="og:type" content="article">
-<meta property="og:title" content="centos_7自动以root身份登录gnome桌面">
-<meta property="og:url" content="http://jonathanchang.top/2016/08/29/centos-7自动以root身份登录gnome桌面/index.html">
+<meta property="og:title" content="node中的path模块常用介绍">
+<meta property="og:url" content="http://jonathanchang.top/2019/03/05/node中的path模块常用介绍/index.html">
 <meta property="og:site_name" content="whatlookingfor">
-<meta property="og:description" content="本文主要介绍在contos7下，如何以root身份登录gnome桌面">
+<meta property="og:description" content="对于前端开发的同学相信大家都会用过path这个模块去解析路径，比较遗憾的是，以往都只是百度其某个方法的用法，没有完整的去看过接口文档，导致现在阅读一些代码的时候碰到path的其他方法一脸懵逼，所以趁着项目不忙去看了一下官方文档并做个笔记。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-10T04:17:10.195Z">
+<meta property="og:updated_time" content="2019-07-29T06:45:41.296Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="centos_7自动以root身份登录gnome桌面">
-<meta name="twitter:description" content="本文主要介绍在contos7下，如何以root身份登录gnome桌面">
+<meta name="twitter:title" content="node中的path模块常用介绍">
+<meta name="twitter:description" content="对于前端开发的同学相信大家都会用过path这个模块去解析路径，比较遗憾的是，以往都只是百度其某个方法的用法，没有完整的去看过接口文档，导致现在阅读一些代码的时候碰到path的其他方法一脸懵逼，所以趁着项目不忙去看了一下官方文档并做个笔记。">
 
 
 
-<link rel="alternative" href="/atom.xml" title="centos_7自动以root身份登录gnome桌面" type="application/atom+xml">
+<link rel="alternative" href="/atom.xml" title="node中的path模块常用介绍" type="application/atom+xml">
 
 
 
@@ -90,7 +90,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="centos_7自动以root身份登录gnome桌面" height="28">
+                <img src="/images/logo.png" alt="node中的path模块常用介绍" height="28">
             
             </a>
         </div>
@@ -141,17 +141,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2016-08-29T09:10:38.000Z">2016-08-29</time>
+                <time class="level-item has-text-grey" datetime="2019-03-05T10:56:27.000Z">2019-03-05</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/运维实施/">运维实施</a>
+                <a class="has-link-grey -link" href="/categories/前端设计/">前端设计</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 542 个字)
+                    6 分钟 读完 (大约 955 个字)
                 </span>
                 
             </div>
@@ -159,42 +159,57 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                centos_7自动以root身份登录gnome桌面
+                node中的path模块常用介绍
             
         </h1>
         <div class="content">
-            <p>本文主要介绍在contos7下，如何以root身份登录gnome桌面</p>
+            <p>对于前端开发的同学相信大家都会用过path这个模块去解析路径，比较遗憾的是，以往都只是百度其某个方法的用法，没有完整的去看过接口文档，导致现在阅读一些代码的时候碰到path的其他方法一脸懵逼，所以趁着项目不忙去看了一下<a href="https://nodejs.org/docs/latest/api/path.html#path_path_basename_path_ext" target="_blank" rel="noopener">官方文档</a>并做个笔记。</p>
 <a id="more"></a>
-<h2 id="CentOS-7自动以root身份登录gnome桌面"><a href="#CentOS-7自动以root身份登录gnome桌面" class="headerlink" title="CentOS 7自动以root身份登录gnome桌面"></a>CentOS 7自动以root身份登录gnome桌面</h2><p>刚刚在虚拟机中成功的安装上了CentOS 7 64位，发现在登录gnome桌面时必须创建一个普通用户，否则不让登录。</p>
-<p>重启CentOS发现下方藏有一个使用其他用户登录选项，可以输入用户名使用root登录。</p>
-<h3 id="1-配置root自动登录gnome"><a href="#1-配置root自动登录gnome" class="headerlink" title="1. 配置root自动登录gnome"></a>1. 配置root自动登录gnome</h3><p>在配置的时候会遇到GDM：</p>
-<p>GDM是什么？</p>
-<blockquote>
-<p>GDM (The GNOME Display Manager)是GNOME显示环境的管理器，并被用来替代原来的X Display Manager。与其竞争者(X3DM,KDM,WDM)不同，GDM是完全重写的，并不包含任何XDM的代码。GDM可以运行并管理本地和远程登录的X服务器(通过XDMCP)。</p>
-<p>gdm仅仅是一个脚本，实际上是通过他来运行GDM二进制可执行文件。</p>
-<p>gdm-stop是用来迅速终止当前正在运行的gdm守护进程的一个脚本。</p>
-<p>gdm-restart脚本将迅速重启当前守护进程。</p>
-<p>gdm-safe-restart会当所有人都注销后再重启。</p>
-<p>gdmsetup是一种可以很简单的修改多数常用选项的图形化界面工具。</p>
-</blockquote>
-<p>百度上搜到的都是RHEL、CentOS 6的配置方法，并不适用于CentOS 7</p>
-<blockquote>
-<p>在CentOS 6较新版本的Linux发行版中预设不允许以root账号登入gnome图形用户桌面，因此一般使用者登入后，可以在终端机以su root，暂时取得root权限；</p>
-<p>如果一定要以root登入图形界面，可以修改/etc/pam.d/gdm以及 /etc/pam.d/gdm-passwd，把这行auth required pam_succeed_if.so user != root quiet加上#注释掉，保存后就可以用root账号了。</p>
-</blockquote>
-<p>对于CentOS 7的用户,简单来说就是：vi /etc/gdm/custom.conf</p>
-<p>然后在[daemon]下面添加：</p>
-<figure class="highlight plain hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[daemon]</span><br><span class="line">AutomaticLoginEnable=True</span><br><span class="line">AutomaticLogin=root  #你想自动登录的用户名</span><br></pre></td></tr></table></figure>
+<h3 id="path-basename-path"><a href="#path-basename-path" class="headerlink" title="path.basename(path)"></a>path.basename(path)</h3><p>参数:</p>
+<ul>
+<li>arg1: 字符串类型路径</li>
+<li>arg2: 可选参数,文件拓展名</li>
+</ul>
+<p>返回值:arg1的最后一部分</p>
+<p>由于此方法在不同的系统解析windows路径出现不一样的效果，可使用path.win32.basename方法代替此方法。</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// mac os环境</span></span><br><span class="line"> </span><br><span class="line"><span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.basename(<span class="hljs-string">'C:/windows/'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.basename(<span class="hljs-string">'C:\\windows\\test.js'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.basename(<span class="hljs-string">'C:/windows/test.js'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.basename(<span class="hljs-string">'C:/windows/test.js'</span>, <span class="hljs-string">'.js'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.win32.basename(<span class="hljs-string">'C:/windows/'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.win32.basename(<span class="hljs-string">'C:\\windows\\test.js'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.win32.basename(<span class="hljs-string">'C:/windows/test.js'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.win32.basename(<span class="hljs-string">'C:/windows/test.js'</span>, <span class="hljs-string">'.js'</span>));</span><br><span class="line"> </span><br><span class="line"><span class="hljs-comment">// 结果</span></span><br><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">windows</span></span><br><span class="line"><span class="hljs-comment">C:\windows\test.js</span></span><br><span class="line"><span class="hljs-comment">test.js</span></span><br><span class="line"><span class="hljs-comment">test</span></span><br><span class="line"><span class="hljs-comment">windows</span></span><br><span class="line"><span class="hljs-comment">test.js</span></span><br><span class="line"><span class="hljs-comment">test.js</span></span><br><span class="line"><span class="hljs-comment">test</span></span><br><span class="line"><span class="hljs-comment">*/</span></span><br><span class="line"> </span><br><span class="line"><span class="hljs-comment">// windows 10 环境</span></span><br><span class="line"><span class="hljs-keyword">const</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>);</span><br><span class="line"> </span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.basename(<span class="hljs-string">'C:\\windows\\test.js'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.basename(<span class="hljs-string">'C:/windows/test.js'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.win32.basename(<span class="hljs-string">'C:\\windows\\test.js'</span>));</span><br><span class="line"><span class="hljs-built_in">console</span>.log(path.win32.basename(<span class="hljs-string">'C:/windows/test.js'</span>));</span><br><span class="line"> </span><br><span class="line"><span class="hljs-comment">// 结果</span></span><br><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">test.js</span></span><br><span class="line"><span class="hljs-comment">test.js</span></span><br><span class="line"><span class="hljs-comment">test.js</span></span><br><span class="line"><span class="hljs-comment">test.js</span></span><br><span class="line"><span class="hljs-comment">*/</span></span><br></pre></td></tr></table></figure>
 
-<p>保存并重启，重启的时候已经以root用户登录了。</p>
+<h3 id="path-delimiter"><a href="#path-delimiter" class="headerlink" title="path.delimiter"></a>path.delimiter</h3><p>参数:多个路径合并的字符串</p>
+<p>返回值:系统所用的多个路径合并的分隔符,(POSIX标准系统返回值为’:’，Windows系统返回值为：’;’)</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">console</span>.log(process.env.PATH);</span><br><span class="line"><span class="hljs-built_in">console</span>.log(process.env.PATH.split(path.delimiter));</span><br><span class="line"> </span><br><span class="line"><span class="hljs-comment">// mac os</span></span><br><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin</span></span><br><span class="line"><span class="hljs-comment">[ '/usr/local/bin', '/usr/bin', '/bin', '/usr/sbin', '/sbin' ]</span></span><br><span class="line"><span class="hljs-comment">*/</span></span><br></pre></td></tr></table></figure>
 
+<h3 id="path-dirname-path"><a href="#path-dirname-path" class="headerlink" title="path.dirname(path)"></a>path.dirname(path)</h3><p>返回路径中代表文件夹路径的字符串</p>
+<h3 id="path-format-object"><a href="#path-format-object" class="headerlink" title="path,format(object)"></a>path,format(object)</h3><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">console</span>.log(path.format(&#123;</span><br><span class="line">    dir: <span class="hljs-string">'home/user/dir'</span>,</span><br><span class="line">    root: <span class="hljs-string">'/test'</span>,</span><br><span class="line">    base: <span class="hljs-string">'file.txt'</span>,</span><br><span class="line">    name: <span class="hljs-string">'anotherFile'</span>,</span><br><span class="line">    ext: <span class="hljs-string">'md'</span></span><br><span class="line">&#125;));</span><br><span class="line"> </span><br><span class="line"><span class="hljs-comment">// home/user/dir/file.txt</span></span><br><span class="line"></span><br><span class="line">&#123;</span><br><span class="line">    dir: string,   <span class="hljs-comment">// 路径</span></span><br><span class="line">    root: string,  <span class="hljs-comment">// 根路径，dir存在时会忽略此参数</span></span><br><span class="line">    base: string,  <span class="hljs-comment">// 文件全名，为`$&#123;name&#125;.$&#123;ext&#125;`</span></span><br><span class="line">    name: string,  <span class="hljs-comment">// 文件名，base存在时会忽略此参数</span></span><br><span class="line">    ext: string    <span class="hljs-comment">// 文件拓展名，base存在时会忽略此参数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="path-join-…paths"><a href="#path-join-…paths" class="headerlink" title="path.join([…paths])"></a>path.join([…paths])</h3><p>参数:字符串数组(如果字符串为空,会被忽略,’.’表示当前路径,’..’表示父级路径)</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">path.join(<span class="hljs-string">'/foo'</span>, <span class="hljs-string">'bar'</span>, <span class="hljs-string">'baz/asdf'</span>, <span class="hljs-string">'quux'</span>, <span class="hljs-string">'..'</span>);</span><br><span class="line"><span class="hljs-comment">// Returns: '/foo/bar/baz/asdf'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="path-normalize-path"><a href="#path-normalize-path" class="headerlink" title="path.normalize(path)"></a>path.normalize(path)</h3><p>返回参数路径path的标准路径字符串,简单的解释就是规范化路径</p>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//on POSIX:</span></span><br><span class="line">path.normalize(<span class="hljs-string">'/foo/bar//baz/asdf/quux/..'</span>);</span><br><span class="line"><span class="hljs-comment">// Returns: '/foo/bar/baz/asdf'</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//On Windows:</span></span><br><span class="line">path.normalize(<span class="hljs-string">'C:\\temp\\\\foo\\bar\\..\\'</span>);</span><br><span class="line"><span class="hljs-comment">// Returns: 'C:\\temp\\foo\\'</span></span><br><span class="line">path.win32.normalize(<span class="hljs-string">'C:////temp\\\\/\\/\\/foo/bar'</span>);</span><br><span class="line"><span class="hljs-comment">// Returns: 'C:\\temp\\foo\\bar'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="path-relative-from-to"><a href="#path-relative-from-to" class="headerlink" title="path.relative(from, to)"></a>path.relative(from, to)</h3><p>返回from路径到to路径的相对路径</p>
+<h3 id="path-resolve-…paths"><a href="#path-resolve-…paths" class="headerlink" title="path.resolve([…paths])"></a>path.resolve([…paths])</h3><p>参数:路径字符串数组</p>
+<p>返回值:有参数路径组成的一个绝对路径,组成规则如下:</p>
+<ol>
+<li>从右往左拼接字符串，如果此过程中拼接结果出现绝对路径，则停止解析，返回此绝对路径；</li>
+<li>若从右往左拼接字符串都没有出现绝对路径，则以当前工作目录路径作为前缀返回拼接结果</li>
+</ol>
+<figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">path.resolve(<span class="hljs-string">'/foo/bar'</span>, <span class="hljs-string">'./baz'</span>);</span><br><span class="line"><span class="hljs-comment">// Returns: '/foo/bar/baz'</span></span><br><span class="line"></span><br><span class="line">path.resolve(<span class="hljs-string">'/foo/bar'</span>, <span class="hljs-string">'/tmp/file/'</span>);</span><br><span class="line"><span class="hljs-comment">// Returns: '/tmp/file'</span></span><br><span class="line"></span><br><span class="line">path.resolve(<span class="hljs-string">'wwwroot'</span>, <span class="hljs-string">'static_files/png/'</span>, <span class="hljs-string">'../gif/image.gif'</span>);</span><br><span class="line"><span class="hljs-comment">// If the current working directory is /home/myself/node,</span></span><br><span class="line"><span class="hljs-comment">// this returns '/home/myself/node/wwwroot/static_files/gif/image.gif'</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="path-sep"><a href="#path-sep" class="headerlink" title="path.sep"></a>path.sep</h3><p>返回操作系统的默认路径分隔符</p>
+<ul>
+<li><code>\</code> on Windows</li>
+<li><code>/</code> on POSIX</li>
+</ul>
+<h3 id="path-isAbsolute-path"><a href="#path-isAbsolute-path" class="headerlink" title="path.isAbsolute(path)"></a>path.isAbsolute(path)</h3><p>判断参数path是否是绝对路径</p>
+<h3 id="综合实例"><a href="#综合实例" class="headerlink" title="综合实例"></a>综合实例</h3><figure class="highlight js hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> path = <span class="hljs-built_in">require</span>(<span class="hljs-string">"path"</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 格式化路径</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'normalization : '</span> + path.normalize(<span class="hljs-string">'/test/test1//2slashes/1slash/tab/..'</span>));</span><br><span class="line"><span class="hljs-comment">//normalization : /test/test1/2slashes/1slash</span></span><br><span class="line"><span class="hljs-comment">// 连接路径</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'joint path : '</span> + path.join(<span class="hljs-string">'/test'</span>, <span class="hljs-string">'test1'</span>, <span class="hljs-string">'2slashes/1slash'</span>, <span class="hljs-string">'tab'</span>, <span class="hljs-string">'..'</span>));</span><br><span class="line"><span class="hljs-comment">//joint path : /test/test1/2slashes/1slash</span></span><br><span class="line"><span class="hljs-comment">// 转换为绝对路径</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'resolve : '</span> + path.resolve(<span class="hljs-string">'main.js'</span>));</span><br><span class="line"><span class="hljs-comment">//resolve : /web/com/1427176256_27423/main.js</span></span><br><span class="line"><span class="hljs-comment">// 路径中文件的后缀名</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ext name : '</span> + path.extname(<span class="hljs-string">'main.js'</span>));</span><br><span class="line"><span class="hljs-comment">//ext name : .js</span></span><br></pre></td></tr></table></figure>
         </div>
         
         <div class="level is-size-7 is-uppercase">
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/linux/">linux</a>
+                    <a class="has-link-grey -link" href="/tags/node/">node</a>
                 </div>
             </div>
         </div>
@@ -216,16 +231,16 @@
     <div class="level post-navigation is-flex-wrap is-mobile">
         
         <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/08/30/centos7下安装oracle11gR2/">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2019/03/05/webpack配置介绍/">
                 <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">centos7下安装oracle11gR2</span>
+                <span class="level-item">Webpack配置介绍</span>
             </a>
         </div>
         
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2016/08/25/ubuntu下防火墙端口号的设置/">
-                <span class="level-item">ubuntu下防火墙端口号的设置</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2018/09/03/Lambda表达式详解/">
+                <span class="level-item">Lambda表达式详解</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -246,7 +261,7 @@
     var gitalk = new Gitalk({
         clientID: '422042c69d84f3ef6d0d',
         clientSecret: '053297d6d21b8963844801733df8e21c64adbae0',
-        id: '6a57188405502c062489803488aa2419',
+        id: '49db94e3c01251d48c00872c9989e49d',
         repo: 'jonathanzhan.github.io',
         owner: 'jonathanzhan',
         admin: "jonathanzhan"
@@ -1602,7 +1617,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!--<a class="footer-logo is-block has-mb-6" href="/">-->
                 <!---->
-                    <!--<img src="/images/logo.png" alt="centos_7自动以root身份登录gnome桌面" height="28">-->
+                    <!--<img src="/images/logo.png" alt="node中的path模块常用介绍" height="28">-->
                 <!---->
                 <!--</a>-->
                 <p class="is-size-7">
