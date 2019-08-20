@@ -2,27 +2,29 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>RedisTemplate使用说明(常用接口方法) - whatlookingfor</title>
+<title>java设计模式之建造者模式 - whatlookingfor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="在RedisTemplate中提供了几个常用的接口方法的使用，分别是: 1234private ValueOperations&amp;lt;K, V&amp;gt; valueOps;private ListOperations&amp;lt;K, V&amp;gt; listOps;private SetOperations&amp;lt;K, V&amp;gt; setOps;private ZSetOperations&amp;lt;K, V&amp;">
-<meta name="keywords" content="redis">
+    <meta name="description" content="在软件的开发过程中，有时需要创建一个复杂的对象，这个对象通常由多个子部件按照一定的步骤组合而成。例如计算机有CPU,主板，内存，硬盘，显卡，机箱，显示器等组装而成，采购员不可能自己去组装计算机，而是将计算机的配置要求告诉给计算机销售，销售安排技术人员去组装计算机，然后交付。生活中有很多这样的例子，比如房屋的建造，其空间，装修，家具等特性都有所差异，汽车的各个配件等等。以上提到的产品都是由多个部件构">
+<meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RedisTemplate使用说明(常用接口方法)">
-<meta property="og:url" content="http://jonathanchang.top/2016/07/08/RedisTemplate的使用说明(常用接口方法)/index.html">
+<meta property="og:title" content="java设计模式之建造者模式">
+<meta property="og:url" content="http://jonathanchang.top/2019/08/20/java设计模式之建造者模式/index.html">
 <meta property="og:site_name" content="whatlookingfor">
-<meta property="og:description" content="在RedisTemplate中提供了几个常用的接口方法的使用，分别是: 1234private ValueOperations&amp;lt;K, V&amp;gt; valueOps;private ListOperations&amp;lt;K, V&amp;gt; listOps;private SetOperations&amp;lt;K, V&amp;gt; setOps;private ZSetOperations&amp;lt;K, V&amp;">
+<meta property="og:description" content="在软件的开发过程中，有时需要创建一个复杂的对象，这个对象通常由多个子部件按照一定的步骤组合而成。例如计算机有CPU,主板，内存，硬盘，显卡，机箱，显示器等组装而成，采购员不可能自己去组装计算机，而是将计算机的配置要求告诉给计算机销售，销售安排技术人员去组装计算机，然后交付。生活中有很多这样的例子，比如房屋的建造，其空间，装修，家具等特性都有所差异，汽车的各个配件等等。以上提到的产品都是由多个部件构">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-10T04:17:10.191Z">
+<meta property="og:image" content="http://jonathanchang.top/files/dp/builder.png">
+<meta property="og:updated_time" content="2019-08-20T03:16:25.670Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="RedisTemplate使用说明(常用接口方法)">
-<meta name="twitter:description" content="在RedisTemplate中提供了几个常用的接口方法的使用，分别是: 1234private ValueOperations&amp;lt;K, V&amp;gt; valueOps;private ListOperations&amp;lt;K, V&amp;gt; listOps;private SetOperations&amp;lt;K, V&amp;gt; setOps;private ZSetOperations&amp;lt;K, V&amp;">
+<meta name="twitter:title" content="java设计模式之建造者模式">
+<meta name="twitter:description" content="在软件的开发过程中，有时需要创建一个复杂的对象，这个对象通常由多个子部件按照一定的步骤组合而成。例如计算机有CPU,主板，内存，硬盘，显卡，机箱，显示器等组装而成，采购员不可能自己去组装计算机，而是将计算机的配置要求告诉给计算机销售，销售安排技术人员去组装计算机，然后交付。生活中有很多这样的例子，比如房屋的建造，其空间，装修，家具等特性都有所差异，汽车的各个配件等等。以上提到的产品都是由多个部件构">
+<meta name="twitter:image" content="http://jonathanchang.top/files/dp/builder.png">
 
 
 
-<link rel="alternative" href="/atom.xml" title="RedisTemplate使用说明(常用接口方法)" type="application/atom+xml">
+<link rel="alternative" href="/atom.xml" title="java设计模式之建造者模式" type="application/atom+xml">
 
 
 
@@ -90,7 +92,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="RedisTemplate使用说明(常用接口方法)" height="28">
+                <img src="/images/logo.png" alt="java设计模式之建造者模式" height="28">
             
             </a>
         </div>
@@ -145,17 +147,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2016-07-08T10:47:02.000Z">2016-07-08</time>
+                <time class="level-item has-text-grey" datetime="2019-08-20T01:59:31.000Z">2019-08-20</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/java/">java</a>
+                <a class="has-link-grey -link" href="/categories/设计模式/">设计模式</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 444 个字)
+                    9 分钟 读完 (大约 1401 个字)
                 </span>
                 
             </div>
@@ -163,33 +165,47 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                RedisTemplate使用说明(常用接口方法)
+                java设计模式之建造者模式
             
         </h1>
         <div class="content">
-            <p>在RedisTemplate中提供了几个常用的接口方法的使用，分别是:</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">private</span> ValueOperations&lt;K, V&gt; valueOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ListOperations&lt;K, V&gt; listOps;</span><br><span class="line"><span class="hljs-keyword">private</span> SetOperations&lt;K, V&gt; setOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ZSetOperations&lt;K, V&gt; zSetOps;</span><br></pre></td></tr></table></figure>
-
-<p>本文主要讲解几个接口的使用。</p>
+            <p>在软件的开发过程中，有时需要创建一个复杂的对象，这个对象通常由多个子部件按照一定的步骤组合而成。例如计算机有CPU,主板，内存，硬盘，显卡，机箱，显示器等组装而成，采购员不可能自己去组装计算机，而是将计算机的配置要求告诉给计算机销售，销售安排技术人员去组装计算机，然后交付。<br>生活中有很多这样的例子，比如房屋的建造，其空间，装修，家具等特性都有所差异，汽车的各个配件等等。<br>以上提到的产品都是由多个部件构成，每个部件都可以灵活选择,但是其创建的步骤都大同小异。这类产品可以用建造者模式很好的描述出产品的创建过程。</p>
 <a id="more"></a>
+<h3 id="建造者模式的定义及特点"><a href="#建造者模式的定义及特点" class="headerlink" title="建造者模式的定义及特点"></a>建造者模式的定义及特点</h3><p>建造者(builder)模式，属于创建型模式的一种，指的是将一个复杂对象的构造与它的表示分离，使同样的构建过程可以创建不同的表示。它是将一个复杂的对象分解为多个简单的对象或者部件，然后一步一步构建而成。它将变与不变相分离，即部件的组成是不变得，但每一个部分是可以灵活选择的。</p>
+<p>该模式的主要优点如下:</p>
+<ul>
+<li>各个具体的建造者相互独立，有利于系统的扩展</li>
+<li>客户端不需要知道产品内部组成的细节，便于控制细节风险</li>
+</ul>
+<p>其缺点如下:</p>
+<ul>
+<li>产品的组成部分必须相同，这就限制了其使用的范围</li>
+<li>如果产品的内部变化复杂，该模式会增加很多的建造者类</li>
+</ul>
+<p>注意:<br><strong>建造者模式和工厂模式关注点不同，建造者模式注重零部件的组装过程，工厂方法模式注重零部件的创建过程，两者可以结合使用</strong></p>
+<h3 id="建造者模式的结构与实现"><a href="#建造者模式的结构与实现" class="headerlink" title="建造者模式的结构与实现"></a>建造者模式的结构与实现</h3><h4 id="模式的结构"><a href="#模式的结构" class="headerlink" title="模式的结构"></a>模式的结构</h4><p>建造者(builder)模式由产品,抽象建造者，具体建造者，指挥者四个要素组成。</p>
+<ul>
+<li>产品角色(product):它是包含多个组成部件的复杂对象，由具体的建造者来创建各个组件</li>
+<li>抽象建造者(builder):它是一个包含创建产品各个子部件的抽象方法或接口,通常包含一个返回复杂对象的方法(retriveResult)。一般来说，产品角色所包含的零件数量与建造方法的数量相符，总而言之，就是有多少个零件，就有多少相应的建造方法。</li>
+<li>具体建造者(concrete builder)：实现builder接口，完成复杂产品的零部件的具体创建方法和返回产品对象。</li>
+<li>指挥者(director)角色:调用具体建造者角色来创建产品对象。注意的是导演者角色并没有产品类的具体知识，真正拥有产品类的具体知识的是具体建造者角色。</li>
+</ul>
+<p>其结构图如下:<br><img src="/files/dp/builder.png" alt="建造者模式结构图"></p>
+<h4 id="模式的实现"><a href="#模式的实现" class="headerlink" title="模式的实现"></a>模式的实现</h4><h5 id="产品角色"><a href="#产品角色" class="headerlink" title="产品角色"></a>产品角色</h5><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 产品角色</span></span><br><span class="line"><span class="hljs-comment"> *</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Jonathan</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0.0</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/8/20 10:35</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0+</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Product</span> </span>&#123;</span><br><span class="line">    <span class="hljs-comment">//以下定义产品的零部件</span></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品的零部件1</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-keyword">private</span> String part1;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品的零部件2</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-keyword">private</span> String part2;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品的零部件2</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-keyword">private</span> String part3;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">////////省略get set方法</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h3 id="RedisOperations"><a href="#RedisOperations" class="headerlink" title="RedisOperations"></a>RedisOperations</h3><p>这个接口的实现类就是RedisTemplate，提供了一些对Redis命令的一些操作。</p>
-<h3 id="ValueOperations"><a href="#ValueOperations" class="headerlink" title="ValueOperations"></a>ValueOperations</h3><p>这个接口的实现类为:DefaultValueOperations.<br>在RedisTemplate中，已经提供了一个工厂方法:opsForValue()。这个方法会返回一个默认的操作类。另外，我们可以直接通过注解@Resource(name = “redisTemplate”)来进行注入。</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//声明</span></span><br><span class="line"><span class="hljs-meta">@Resource</span>(name = <span class="hljs-string">"redisTemplate"</span>)</span><br><span class="line"><span class="hljs-keyword">private</span> RedisTemplate&lt;String, String&gt; template;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//调用方法</span></span><br><span class="line">template.opsForValue().set(<span class="hljs-string">"key"</span>,<span class="hljs-string">"value"</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="抽象建造者角色"><a href="#抽象建造者角色" class="headerlink" title="抽象建造者角色"></a>抽象建造者角色</h5><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 抽象建造者角色</span></span><br><span class="line"><span class="hljs-comment"> *</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Jonathan</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0.0</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/8/20 10:38</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0+</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">interface</span> <span class="hljs-title">Builder</span> </span>&#123;</span><br><span class="line">    <span class="hljs-comment">//产品零部件的建造方法</span></span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品零部件1的建造方法</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">buildPart1</span><span class="hljs-params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品零部件1的建造方法</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">buildPart2</span><span class="hljs-params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品零部件1的建造方法</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">buildPart3</span><span class="hljs-params">()</span></span>;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 返回产品对象的方法</span></span><br><span class="line"><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> Product</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-function">Product <span class="hljs-title">retrieveResult</span><span class="hljs-params">()</span></span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//RedisTemplate还提供了对应的*OperationsEditor，用来通过RedisTemplate直接注入对应的Operation。</span></span><br><span class="line"><span class="hljs-comment">//声明</span></span><br><span class="line"><span class="hljs-meta">@Resource</span>(name = <span class="hljs-string">"redisTemplate"</span>)</span><br><span class="line"><span class="hljs-keyword">private</span> ValueOperations&lt;String, Object&gt; vOps;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//调用方法</span></span><br><span class="line">vOps.set(<span class="hljs-string">"key"</span>,<span class="hljs-string">"value"</span>);</span><br></pre></td></tr></table></figure>
+<h5 id="具体建造者角色"><a href="#具体建造者角色" class="headerlink" title="具体建造者角色"></a>具体建造者角色</h5><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 具体的建造者对象</span></span><br><span class="line"><span class="hljs-comment"> *</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Jonathan</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0.0</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/8/20 10:40</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0+</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ConcreteBuilder</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Builder</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> Product product = <span class="hljs-keyword">new</span> Product();</span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品零部件1的建造方法</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-meta">@Override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">buildPart1</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        product.setPart1(<span class="hljs-string">"part1"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品零部件1的建造方法</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-meta">@Override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">buildPart2</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        product.setPart2(<span class="hljs-string">"part2"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品零部件1的建造方法</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-meta">@Override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">buildPart3</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        product.setPart3(<span class="hljs-string">"part3"</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 返回产品对象的方法</span></span><br><span class="line"><span class="hljs-comment">     *</span></span><br><span class="line"><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> Product</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-meta">@Override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> Product <span class="hljs-title">retrieveResult</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> product;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>除了可以通过template注入ValueOperations，还可以注入 上面的其他几种operations以及HashOperations</p>
-<p>DefaultValueOperations提供了所有Redis字符串类型的操作api。比如set，get，incr等等。使用这些方法，可以方便的直接存储任意的java类型，而不需要自己去将存储的东西序列化以及反序列化</p>
-<p>ListOperations,SetOperations,ZSetOperations除了提供的操作API不一样以外，其他的调用方法与DefaultValueOperations一致。</p>
-<h3 id="HashOperations接口说明"><a href="#HashOperations接口说明" class="headerlink" title="HashOperations接口说明"></a>HashOperations接口说明</h3><p>这个接口并没有定义成员变量,但是直接提供了方法。</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> &lt;HK, HV&gt; <span class="hljs-function">HashOperations&lt;K, HK, HV&gt; <span class="hljs-title">opsForHash</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">	<span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> DefaultHashOperations&lt;K, HK, HV&gt;(<span class="hljs-keyword">this</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h5 id="指挥者角色"><a href="#指挥者角色" class="headerlink" title="指挥者角色"></a>指挥者角色</h5><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 指挥者角色</span></span><br><span class="line"><span class="hljs-comment"> *</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Jonathan</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0.0</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/8/20 10:41</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0+</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">Director</span> </span>&#123;</span><br><span class="line">    <span class="hljs-keyword">private</span> Builder builder;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 指挥者角色构造方法，传入建造者对象</span></span><br><span class="line"><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> builder Builder</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-title">Director</span><span class="hljs-params">(Builder builder)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.builder = builder;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">     * 产品的构造方法,负责调用各个零件的建造方法，比如产品的生产熟悉怒等</span></span><br><span class="line"><span class="hljs-comment">     */</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">construct</span><span class="hljs-params">()</span></span>&#123;</span><br><span class="line">        builder.buildPart1();</span><br><span class="line">        builder.buildPart2();</span><br><span class="line">        builder.buildPart3();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<p>具体的调用如下：</p>
-<h4 id="方法1"><a href="#方法1" class="headerlink" title="方法1"></a>方法1</h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//注入HashOperations对象</span></span><br><span class="line"><span class="hljs-meta">@Resource</span>(name = <span class="hljs-string">"redisTemplate"</span>)</span><br><span class="line"><span class="hljs-keyword">private</span> HashOperations&lt;String,String,Object&gt; hashOps;</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//具体调用</span></span><br><span class="line">Map&lt;String,String&gt; map = <span class="hljs-keyword">new</span> HashMap&lt;String, String&gt;();</span><br><span class="line">map.put(<span class="hljs-string">"value"</span>,<span class="hljs-string">"code"</span>);</span><br><span class="line">map.put(<span class="hljs-string">"key"</span>,<span class="hljs-string">"keyValue"</span>);</span><br><span class="line">hashOps.putAll(<span class="hljs-string">"hashOps"</span>,map);</span><br></pre></td></tr></table></figure>
+<h5 id="客户端调用"><a href="#客户端调用" class="headerlink" title="客户端调用"></a>客户端调用</h5><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">ClientTest</span> </span>&#123;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> </span>&#123;</span><br><span class="line">        Builder builder = <span class="hljs-keyword">new</span> ConcreteBuilder();</span><br><span class="line">        Director director = <span class="hljs-keyword">new</span> Director(builder);</span><br><span class="line">        director.construct();</span><br><span class="line">        Product product = builder.retrieveResult();</span><br><span class="line">        System.out.println(product.getPart1());</span><br><span class="line">        System.out.println(product.getPart2());</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
-<h4 id="方法2"><a href="#方法2" class="headerlink" title="方法2"></a>方法2</h4><figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//注入RedisTemplate对象</span></span><br><span class="line"><span class="hljs-meta">@Resource</span>(name = <span class="hljs-string">"redisTemplate"</span>)</span><br><span class="line"><span class="hljs-keyword">private</span> RedisTemplate&lt;String, String&gt; template;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//具体调用</span></span><br><span class="line">Map&lt;String,String&gt; map = <span class="hljs-keyword">new</span> HashMap&lt;String, String&gt;();</span><br><span class="line">map.put(<span class="hljs-string">"value"</span>,<span class="hljs-string">"code"</span>);</span><br><span class="line">map.put(<span class="hljs-string">"key"</span>,<span class="hljs-string">"keyValue"</span>);</span><br><span class="line">template.opsForHash().putAll(<span class="hljs-string">"hashOps"</span>,map);</span><br></pre></td></tr></table></figure>
-
+<h3 id="模式的应用场景"><a href="#模式的应用场景" class="headerlink" title="模式的应用场景"></a>模式的应用场景</h3><p>建造者模式创建的是复杂的对象，其产品的各个部分经常面临着剧烈的变化，但将他们组合在一起的算法是相对稳定的，所以通常用在以下场景:</p>
+<ul>
+<li>创建的对象较复杂，由多个部件构成，各部件面临着复杂的变化，但构件间的建造顺序是稳定的</li>
+<li>创建复杂对象的算法独立于该对象的组成部分以及他们的装备方式，即产品的构建过程和最终的表示是独立的</li>
+</ul>
 
         </div>
         
@@ -197,7 +213,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/redis/">redis</a>
+                    <a class="has-link-grey -link" href="/tags/设计模式/">设计模式</a>
                 </div>
             </div>
         </div>
@@ -218,17 +234,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">RedisTemplate的使用说明(序列化以及事物)</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2016/07/08/Spring Redis基本使用/">
-                <span class="level-item">Spring Redis基本使用</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/08/19/java设计模式之单例模式/">
+                <span class="level-item">java设计模式之单例模式</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -249,7 +258,7 @@
     var gitalk = new Gitalk({
         clientID: '422042c69d84f3ef6d0d',
         clientSecret: '053297d6d21b8963844801733df8e21c64adbae0',
-        id: 'ec76a6229ba12624c0842d39543194b9',
+        id: '4fc9d179a2a86f4dcfe1865f3139c431',
         repo: 'jonathanzhan.github.io',
         owner: 'jonathanzhan',
         admin: "jonathanzhan"
@@ -371,26 +380,46 @@
                 目录
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#RedisOperations">
+        <a class="is-flex" href="#建造者模式的定义及特点">
         <span class="has-mr-6">1</span>
-        <span>RedisOperations</span>
+        <span>建造者模式的定义及特点</span>
         </a></li><li>
-        <a class="is-flex" href="#ValueOperations">
+        <a class="is-flex" href="#建造者模式的结构与实现">
         <span class="has-mr-6">2</span>
-        <span>ValueOperations</span>
-        </a></li><li>
-        <a class="is-flex" href="#HashOperations接口说明">
-        <span class="has-mr-6">3</span>
-        <span>HashOperations接口说明</span>
+        <span>建造者模式的结构与实现</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#方法1">
-        <span class="has-mr-6">3.1</span>
-        <span>方法1</span>
+        <a class="is-flex" href="#模式的结构">
+        <span class="has-mr-6">2.1</span>
+        <span>模式的结构</span>
         </a></li><li>
-        <a class="is-flex" href="#方法2">
-        <span class="has-mr-6">3.2</span>
-        <span>方法2</span>
-        </a></li></ul></li></ul>
+        <a class="is-flex" href="#模式的实现">
+        <span class="has-mr-6">2.2</span>
+        <span>模式的实现</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#产品角色">
+        <span class="has-mr-6">2.2.1</span>
+        <span>产品角色</span>
+        </a></li><li>
+        <a class="is-flex" href="#抽象建造者角色">
+        <span class="has-mr-6">2.2.2</span>
+        <span>抽象建造者角色</span>
+        </a></li><li>
+        <a class="is-flex" href="#具体建造者角色">
+        <span class="has-mr-6">2.2.3</span>
+        <span>具体建造者角色</span>
+        </a></li><li>
+        <a class="is-flex" href="#指挥者角色">
+        <span class="has-mr-6">2.2.4</span>
+        <span>指挥者角色</span>
+        </a></li><li>
+        <a class="is-flex" href="#客户端调用">
+        <span class="has-mr-6">2.2.5</span>
+        <span>客户端调用</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#模式的应用场景">
+        <span class="has-mr-6">3</span>
+        <span>模式的应用场景</span>
+        </a></li></ul>
         </div>
     </div>
 </div>
@@ -1680,7 +1709,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!--<a class="footer-logo is-block has-mb-6" href="/">-->
                 <!---->
-                    <!--<img src="/images/logo.png" alt="RedisTemplate使用说明(常用接口方法)" height="28">-->
+                    <!--<img src="/images/logo.png" alt="java设计模式之建造者模式" height="28">-->
                 <!---->
                 <!--</a>-->
                 <p class="is-size-7">
