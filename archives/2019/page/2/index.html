@@ -2,27 +2,22 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>ubuntu下源码安装gitlab,可汉化 - whatlookingfor</title>
+<title>归档: 2019 - whatlookingfor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="此方法也适用于其他的linux版本。gitlab中有中文的源码汉化包，通过源码安装，一方面后面比较好配置，另外一方面，省去了汉化的步骤。不要相信网上说的汉化补丁，因为汉化的版本与你安装的版本几乎是不一致的，你需要找相同版本的。另外版本相同的情况下，补丁打好后，也只有那么不到百分之一的生效了。">
-<meta name="keywords" content="linux">
-<meta property="og:type" content="article">
-<meta property="og:title" content="ubuntu下源码安装gitlab,可汉化">
-<meta property="og:url" content="http://jonathanchang.top/2016/10/25/ubuntu下源码安装gitlab-可汉化/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="whatlookingfor">
+<meta property="og:url" content="http://jonathanchang.top/archives/2019/page/2/index.html">
 <meta property="og:site_name" content="whatlookingfor">
-<meta property="og:description" content="此方法也适用于其他的linux版本。gitlab中有中文的源码汉化包，通过源码安装，一方面后面比较好配置，另外一方面，省去了汉化的步骤。不要相信网上说的汉化补丁，因为汉化的版本与你安装的版本几乎是不一致的，你需要找相同版本的。另外版本相同的情况下，补丁打好后，也只有那么不到百分之一的生效了。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-10T04:17:10.202Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ubuntu下源码安装gitlab,可汉化">
-<meta name="twitter:description" content="此方法也适用于其他的linux版本。gitlab中有中文的源码汉化包，通过源码安装，一方面后面比较好配置，另外一方面，省去了汉化的步骤。不要相信网上说的汉化补丁，因为汉化的版本与你安装的版本几乎是不一致的，你需要找相同版本的。另外版本相同的情况下，补丁打好后，也只有那么不到百分之一的生效了。">
+<meta name="twitter:title" content="whatlookingfor">
 
 
 
-<link rel="alternative" href="/atom.xml" title="ubuntu下源码安装gitlab,可汉化" type="application/atom+xml">
+<link rel="alternative" href="/atom.xml" title="whatlookingfor" type="application/atom+xml">
 
 
 
@@ -90,7 +85,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="ubuntu下源码安装gitlab,可汉化" height="28">
+                <img src="/images/logo.png" alt="whatlookingfor" height="28">
             
             </a>
         </div>
@@ -135,129 +130,57 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2016-10-25T10:03:04.000Z">2016-10-25</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/运维实施/">运维实施</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    4 分钟 读完 (大约 634 个字)
-                </span>
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                ubuntu下源码安装gitlab,可汉化
-            
-        </h1>
-        <div class="content">
-            <p>此方法也适用于其他的linux版本。gitlab中有中文的源码汉化包，通过源码安装，一方面后面比较好配置，另外一方面，省去了汉化的步骤。不要相信网上说的汉化补丁，因为汉化的版本与你安装的版本几乎是不一致的，你需要找相同版本的。另外版本相同的情况下，补丁打好后，也只有那么不到百分之一的生效了。</p>
-<a id="more"></a>
-<p>具体步骤如下：<br>参考<a href="http://docs.gitlab.com/ce/install/installation.html" target="_blank" rel="noopener">gitlab官网安装说明</a></p>
-<p>前面的七步操作全部按照官网的来,数据库我使用的是mysql，在安装pgsql的时候报错了，对pgsql也不熟悉，所以改装mysql了。</p>
-<p>在通过gitlab下载的时候需要注意更换源码的地址。因为我需要中文汉化包的源代码。<br><code>sudo -u git -H git clone https://gitlab.com/larryli/gitlab.git -b 8-8-zh gitlab</code></p>
-<h3 id="配置gitlab-yml说明："><a href="#配置gitlab-yml说明：" class="headerlink" title="配置gitlab.yml说明："></a>配置gitlab.yml说明：</h3><p>在下载完gitlab，配置参数的时候需要注意<br>gitlab:<br>    host:  IP地址或者域名，不加http://</p>
-<p>email_from: _配饰smtp使用的，设置为邮箱。</p>
-<p>plain_url: “<a href="http://gravatar.duoshuo.com/avatar/%{hash}?s=%{size}&amp;d=identicon&quot;" target="_blank" rel="noopener">http://gravatar.duoshuo.com/avatar/%{hash}?s=%{size}&amp;d=identicon&quot;</a>_  配置头像(默认的地址被墙了)</p>
-<h3 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h3><p>文档上说必须是要写域名的，我尝试了下，其实走IP也是可以的。</p>
-<h3 id="通知邮箱的配置-基于smtp"><a href="#通知邮箱的配置-基于smtp" class="headerlink" title="通知邮箱的配置(基于smtp)"></a>通知邮箱的配置(基于smtp)</h3><p>首先是拷贝Gitlab自带的example</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">cd</span> /home/git/gitlab</span><br><span class="line">sudo -u git -H cp config/initializers/smtp_settings.rb.sample config/initializers/smtp_settings.rb</span><br></pre></td></tr></table></figure>
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
 
-<p>然后用我们自己的邮箱替换example中的邮箱<br>这里提供163和腾讯企业邮箱两种配置方式，注意将下面的123456替换成自己的密码<br>163：</p>
-<figure class="highlight yml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">address:</span> <span class="hljs-string">"smtp.163.com"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">port:</span> <span class="hljs-number">25</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">user_name:</span> <span class="hljs-string">"gitlab"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">domain:</span> <span class="hljs-string">"163.com"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">authentication:</span> <span class="hljs-string">:plain,</span></span><br><span class="line">    <span class="hljs-attr">enable_starttls_auto:</span> <span class="hljs-literal">true</span></span><br></pre></td></tr></table></figure>
-
-<p>腾讯企业邮箱</p>
-<figure class="highlight yml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">address:</span> <span class="hljs-string">"smtp.exmail.qq.com"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">port:</span> <span class="hljs-number">25</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">user_name:</span> <span class="hljs-string">“asdsd@asds.com",</span></span><br><span class="line">    <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">domain:</span> <span class="hljs-string">"smtp.qq.com"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">authentication:</span> <span class="hljs-string">:plain,</span></span><br><span class="line">    <span class="hljs-attr">enable_starttls_auto:</span> <span class="hljs-literal">true</span><span class="hljs-string">,</span></span><br></pre></td></tr></table></figure>
-
-<p>修改gitlab.yml<br>将默认邮箱修改为自己的邮箱</p>
-<figure class="highlight yml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">    <span class="hljs-attr">email_from:</span> <span class="hljs-string">asdsd@asds.com</span></span><br></pre></td></tr></table></figure>
-
-<p>重启<br>sudo /etc/init.d/gitlab restart</p>
-<p>注意事项：</p>
-<ol>
-<li>不需要修改 config/environments/production.rb，网上的其他文章说要修改这个文件可能是针对老版本的，gitlab7.0不需要修改这个文件</li>
-<li>腾讯企业邮箱不能使用其帮助网页上所写的465端口。设置了openssl_verify_mode也没有作用。反正我没有设置成功。</li>
-</ol>
-
-        </div>
-        
-        <div class="level is-size-7 is-uppercase">
-            <div class="level-start">
-                <div class="level-item">
-                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/linux/">linux</a>
-                </div>
-            </div>
-        </div>
-        
-        
-        
-        <div class="social-share"></div>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
-<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
-        
-    </div>
-</div>
-
-
-
-
-
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/10/25/mysql关于锁表的监控/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">mysql关于锁表的监控</span>
-            </a>
-        </div>
-        
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2016/10/11/activiti入门六-集成新版Activiti-Modeler与Rest服务/">
-                <span class="level-item">activiti入门六(集成新版Activiti Modeler与Rest服务)</span>
-                <i class="level-item fas fa-chevron-right"></i>
-            </a>
-        </div>
-        
-    </div>
-</div>
-
-
-
-<div class="card">
+<div class="card widget">
     <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        <h3 class="tag is-link">
+        2019
+        </h3>
+        <div class="timeline">
         
-<div id="comment-container"></div>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
-<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
-<script>
-    var gitalk = new Gitalk({
-        clientID: '422042c69d84f3ef6d0d',
-        clientSecret: '053297d6d21b8963844801733df8e21c64adbae0',
-        id: 'fd9bc326db665d9a1a0b47a4de9eae5d',
-        repo: 'jonathanzhan.github.io',
-        owner: 'jonathanzhan',
-        admin: "jonathanzhan"
-    })
-    gitalk.render('comment-container')
-</script>
-
+            <article class="media">
+                
+                <div class="media-content">
+                    <div class="content">
+                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2019-03-05T10:56:27.000Z">2019-03-05</time>
+                        <a href="/2019/03/05/node中的path模块常用介绍/" class="has-link-black-ter is-size-6">node中的path模块常用介绍</a>
+                        <div class="level article-meta is-mobile">
+                            <div class="level-left">
+                                
+                                <div class="level-item is-size-7 is-uppercase">
+                                <a class="has-link-grey -link" href="/categories/前端设计/">前端设计</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        
+        </div>
     </div>
+</div>
+
+
+
+    
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous">
+            <a class="is-flex-grow has-text-black-ter" href="/archives/2019/">上一页</a>
+        </div>
+        <div class="pagination-next is-invisible is-hidden-mobile">
+            <a class="is-flex-grow has-text-black-ter" href="/archives/2019/page/3/">下一页</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link has-text-black-ter" href="/archives/2019/">1</a></li>
+            
+            <li><a class="pagination-link is-current" href="/archives/2019/page/2/">2</a></li>
+            
+        </ul>
+    </nav>
 </div>
 </div>
                 
@@ -1649,7 +1572,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!--<a class="footer-logo is-block has-mb-6" href="/">-->
                 <!---->
-                    <!--<img src="/images/logo.png" alt="ubuntu下源码安装gitlab,可汉化" height="28">-->
+                    <!--<img src="/images/logo.png" alt="whatlookingfor" height="28">-->
                 <!---->
                 <!--</a>-->
                 <p class="is-size-7">

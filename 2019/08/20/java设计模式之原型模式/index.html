@@ -2,27 +2,27 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>ubuntu下源码安装gitlab,可汉化 - whatlookingfor</title>
+<title>java设计模式之原型模式 - whatlookingfor</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="此方法也适用于其他的linux版本。gitlab中有中文的源码汉化包，通过源码安装，一方面后面比较好配置，另外一方面，省去了汉化的步骤。不要相信网上说的汉化补丁，因为汉化的版本与你安装的版本几乎是不一致的，你需要找相同版本的。另外版本相同的情况下，补丁打好后，也只有那么不到百分之一的生效了。">
-<meta name="keywords" content="linux">
+    <meta name="description" content="在有些系统中，存在大量的相同或相似对象的创建问题，如果用传统的构造函数来创建对象，会比较复杂且耗时耗资源，用原型模式生成对象就很高效，就像孙悟空拔下猴毛变出很多孙悟空一样简单。">
+<meta name="keywords" content="设计模式">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ubuntu下源码安装gitlab,可汉化">
-<meta property="og:url" content="http://jonathanchang.top/2016/10/25/ubuntu下源码安装gitlab-可汉化/index.html">
+<meta property="og:title" content="java设计模式之原型模式">
+<meta property="og:url" content="http://jonathanchang.top/2019/08/20/java设计模式之原型模式/index.html">
 <meta property="og:site_name" content="whatlookingfor">
-<meta property="og:description" content="此方法也适用于其他的linux版本。gitlab中有中文的源码汉化包，通过源码安装，一方面后面比较好配置，另外一方面，省去了汉化的步骤。不要相信网上说的汉化补丁，因为汉化的版本与你安装的版本几乎是不一致的，你需要找相同版本的。另外版本相同的情况下，补丁打好后，也只有那么不到百分之一的生效了。">
+<meta property="og:description" content="在有些系统中，存在大量的相同或相似对象的创建问题，如果用传统的构造函数来创建对象，会比较复杂且耗时耗资源，用原型模式生成对象就很高效，就像孙悟空拔下猴毛变出很多孙悟空一样简单。">
 <meta property="og:locale" content="zh-CN">
-<meta property="og:updated_time" content="2019-06-10T04:17:10.202Z">
+<meta property="og:updated_time" content="2019-08-20T07:31:30.543Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ubuntu下源码安装gitlab,可汉化">
-<meta name="twitter:description" content="此方法也适用于其他的linux版本。gitlab中有中文的源码汉化包，通过源码安装，一方面后面比较好配置，另外一方面，省去了汉化的步骤。不要相信网上说的汉化补丁，因为汉化的版本与你安装的版本几乎是不一致的，你需要找相同版本的。另外版本相同的情况下，补丁打好后，也只有那么不到百分之一的生效了。">
+<meta name="twitter:title" content="java设计模式之原型模式">
+<meta name="twitter:description" content="在有些系统中，存在大量的相同或相似对象的创建问题，如果用传统的构造函数来创建对象，会比较复杂且耗时耗资源，用原型模式生成对象就很高效，就像孙悟空拔下猴毛变出很多孙悟空一样简单。">
 
 
 
-<link rel="alternative" href="/atom.xml" title="ubuntu下源码安装gitlab,可汉化" type="application/atom+xml">
+<link rel="alternative" href="/atom.xml" title="java设计模式之原型模式" type="application/atom+xml">
 
 
 
@@ -90,7 +90,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="ubuntu下源码安装gitlab,可汉化" height="28">
+                <img src="/images/logo.png" alt="java设计模式之原型模式" height="28">
             
             </a>
         </div>
@@ -122,6 +122,10 @@
                     
                 
                 
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
                 
                 <a class="navbar-item search" title="搜索" href="javascript:;">
                     <i class="fas fa-search"></i>
@@ -141,17 +145,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2016-10-25T10:03:04.000Z">2016-10-25</time>
+                <time class="level-item has-text-grey" datetime="2019-08-20T03:50:45.000Z">2019-08-20</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/运维实施/">运维实施</a>
+                <a class="has-link-grey -link" href="/categories/设计模式/">设计模式</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 634 个字)
+                    6 分钟 读完 (大约 871 个字)
                 </span>
                 
             </div>
@@ -159,37 +163,31 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                ubuntu下源码安装gitlab,可汉化
+                java设计模式之原型模式
             
         </h1>
         <div class="content">
-            <p>此方法也适用于其他的linux版本。gitlab中有中文的源码汉化包，通过源码安装，一方面后面比较好配置，另外一方面，省去了汉化的步骤。不要相信网上说的汉化补丁，因为汉化的版本与你安装的版本几乎是不一致的，你需要找相同版本的。另外版本相同的情况下，补丁打好后，也只有那么不到百分之一的生效了。</p>
+            <p>在有些系统中，存在大量的相同或相似对象的创建问题，如果用传统的构造函数来创建对象，会比较复杂且耗时耗资源，用原型模式生成对象就很高效，就像孙悟空拔下猴毛变出很多孙悟空一样简单。</p>
 <a id="more"></a>
-<p>具体步骤如下：<br>参考<a href="http://docs.gitlab.com/ce/install/installation.html" target="_blank" rel="noopener">gitlab官网安装说明</a></p>
-<p>前面的七步操作全部按照官网的来,数据库我使用的是mysql，在安装pgsql的时候报错了，对pgsql也不熟悉，所以改装mysql了。</p>
-<p>在通过gitlab下载的时候需要注意更换源码的地址。因为我需要中文汉化包的源代码。<br><code>sudo -u git -H git clone https://gitlab.com/larryli/gitlab.git -b 8-8-zh gitlab</code></p>
-<h3 id="配置gitlab-yml说明："><a href="#配置gitlab-yml说明：" class="headerlink" title="配置gitlab.yml说明："></a>配置gitlab.yml说明：</h3><p>在下载完gitlab，配置参数的时候需要注意<br>gitlab:<br>    host:  IP地址或者域名，不加http://</p>
-<p>email_from: _配饰smtp使用的，设置为邮箱。</p>
-<p>plain_url: “<a href="http://gravatar.duoshuo.com/avatar/%{hash}?s=%{size}&amp;d=identicon&quot;" target="_blank" rel="noopener">http://gravatar.duoshuo.com/avatar/%{hash}?s=%{size}&amp;d=identicon&quot;</a>_  配置头像(默认的地址被墙了)</p>
-<h3 id="Nginx配置"><a href="#Nginx配置" class="headerlink" title="Nginx配置"></a>Nginx配置</h3><p>文档上说必须是要写域名的，我尝试了下，其实走IP也是可以的。</p>
-<h3 id="通知邮箱的配置-基于smtp"><a href="#通知邮箱的配置-基于smtp" class="headerlink" title="通知邮箱的配置(基于smtp)"></a>通知邮箱的配置(基于smtp)</h3><p>首先是拷贝Gitlab自带的example</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">cd</span> /home/git/gitlab</span><br><span class="line">sudo -u git -H cp config/initializers/smtp_settings.rb.sample config/initializers/smtp_settings.rb</span><br></pre></td></tr></table></figure>
-
-<p>然后用我们自己的邮箱替换example中的邮箱<br>这里提供163和腾讯企业邮箱两种配置方式，注意将下面的123456替换成自己的密码<br>163：</p>
-<figure class="highlight yml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">address:</span> <span class="hljs-string">"smtp.163.com"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">port:</span> <span class="hljs-number">25</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">user_name:</span> <span class="hljs-string">"gitlab"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">domain:</span> <span class="hljs-string">"163.com"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">authentication:</span> <span class="hljs-string">:plain,</span></span><br><span class="line">    <span class="hljs-attr">enable_starttls_auto:</span> <span class="hljs-literal">true</span></span><br></pre></td></tr></table></figure>
-
-<p>腾讯企业邮箱</p>
-<figure class="highlight yml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-attr">address:</span> <span class="hljs-string">"smtp.exmail.qq.com"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">port:</span> <span class="hljs-number">25</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">user_name:</span> <span class="hljs-string">“asdsd@asds.com",</span></span><br><span class="line">    <span class="hljs-attr">password:</span> <span class="hljs-string">"123456"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">domain:</span> <span class="hljs-string">"smtp.qq.com"</span><span class="hljs-string">,</span></span><br><span class="line">    <span class="hljs-attr">authentication:</span> <span class="hljs-string">:plain,</span></span><br><span class="line">    <span class="hljs-attr">enable_starttls_auto:</span> <span class="hljs-literal">true</span><span class="hljs-string">,</span></span><br></pre></td></tr></table></figure>
-
-<p>修改gitlab.yml<br>将默认邮箱修改为自己的邮箱</p>
-<figure class="highlight yml hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">    <span class="hljs-attr">email_from:</span> <span class="hljs-string">asdsd@asds.com</span></span><br></pre></td></tr></table></figure>
-
-<p>重启<br>sudo /etc/init.d/gitlab restart</p>
-<p>注意事项：</p>
+<h3 id="原型模式的定义与特点"><a href="#原型模式的定义与特点" class="headerlink" title="原型模式的定义与特点"></a>原型模式的定义与特点</h3><p>原型(prototype)模式的定义如下:用一个已创建的实例作为原型，通过复制该原型对象来创建一个和原型相同或相似的新对象。在这里，原型实例指定了要创建的对象的种类。用这种方法创建对象非常高效，根本无须知道对象创建的细节。例如windows操作系统安装通常较耗时，但是通过复制镜像就快了很多。</p>
+<h3 id="原型模式的结构"><a href="#原型模式的结构" class="headerlink" title="原型模式的结构"></a>原型模式的结构</h3><p>由于java提供了对象的clone()方法,所以用java实现原型模式很简单<br>原型模式包含以下主要角色:</p>
 <ol>
-<li>不需要修改 config/environments/production.rb，网上的其他文章说要修改这个文件可能是针对老版本的，gitlab7.0不需要修改这个文件</li>
-<li>腾讯企业邮箱不能使用其帮助网页上所写的465端口。设置了openssl_verify_mode也没有作用。反正我没有设置成功。</li>
+<li>抽象原型类:规定了具体原型对象必须实现的接口。</li>
+<li>具体原型类:实现抽象原型类的clone()方法，它是可被复制的对象</li>
+<li>访问类:使用具体原型类中的clone()来复制新的对象</li>
 </ol>
+<h3 id="浅度克隆的实现"><a href="#浅度克隆的实现" class="headerlink" title="浅度克隆的实现"></a>浅度克隆的实现</h3><p>浅度克隆只负责克隆按值传递的数据(比如基本数据类型，String类型)，而不复制它所引用的对象。换言之，所有的对其他对象的引用都仍然指向原来的对象。java中的object类提供了浅克隆的clone()方法，具体原型类只要实现cloneable接口就可以实现对象的浅克隆。cloneable接口就是抽象原型类。<br>代码如下:</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 抽象原型之浅克隆</span></span><br><span class="line"><span class="hljs-comment"> *</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@author</span> Jonathan</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@version</span> 1.0.0</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@date</span> 2019/8/20 15:08</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@since</span> 1.0.0+</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-keyword">public</span> <span class="hljs-class"><span class="hljs-keyword">class</span> <span class="hljs-title">RealizeType</span> <span class="hljs-keyword">implements</span> <span class="hljs-title">Cloneable</span> </span>&#123;</span><br><span class="line">    RealizeType()</span><br><span class="line">    &#123;</span><br><span class="line">        System.out.println(<span class="hljs-string">"具体原型创建成功！"</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">private</span> String name;</span><br><span class="line">    <span class="hljs-keyword">private</span> List&lt;String&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">    <span class="hljs-meta">@Override</span></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException</span></span><br><span class="line"><span class="hljs-function">    </span>&#123;</span><br><span class="line">        System.out.println(<span class="hljs-string">"具体原型复制成功！"</span>);</span><br><span class="line">        <span class="hljs-keyword">return</span> (RealizeType)<span class="hljs-keyword">super</span>.clone();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> String <span class="hljs-title">getName</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> name;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setName</span><span class="hljs-params">(String name)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.name = name;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> List&lt;String&gt; <span class="hljs-title">getList</span><span class="hljs-params">()</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">return</span> list;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title">setList</span><span class="hljs-params">(List&lt;String&gt; list)</span> </span>&#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.list = list;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title">main</span><span class="hljs-params">(String[] args)</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException </span>&#123;</span><br><span class="line">    RealizeType realizetype = <span class="hljs-keyword">new</span> RealizeType();</span><br><span class="line">    realizetype.setName(<span class="hljs-string">"test1"</span>);</span><br><span class="line"></span><br><span class="line">    List&lt;String&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;String&gt;();</span><br><span class="line">    list.add(<span class="hljs-string">"1111"</span>);</span><br><span class="line">    list.add(<span class="hljs-string">"2222"</span>);</span><br><span class="line">    realizetype.setList(list);</span><br><span class="line"></span><br><span class="line">    RealizeType cloneType = (RealizeType) realizetype.clone();</span><br><span class="line">    list.add(<span class="hljs-string">"3333"</span>);</span><br><span class="line">    cloneType.setName(<span class="hljs-string">"test2"</span>);</span><br><span class="line">    cloneType.setList(list);</span><br><span class="line">    System.out.println(realizetype.getName());</span><br><span class="line">    System.out.println(cloneType.getName());</span><br><span class="line">    System.out.println(realizetype.getList());</span><br><span class="line">    System.out.println(cloneType.getList());</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>浅度克隆对于基本类型和String类型的数据前后都是指向不同的地址空间的，改变一个不会影响其他的对象<br>但是如果包含引用类型，比如对象，数组，集合等，就只会克隆引用，结果指向同一个引用地址</p>
+<h3 id="深度克隆"><a href="#深度克隆" class="headerlink" title="深度克隆"></a>深度克隆</h3><p>由于浅度克隆的引用类型问题，我们引入了深度克隆的方式。<br>要实现深度克隆，我们必须修改clone方法</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment"> * 深度克隆</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@return</span> Object</span></span><br><span class="line"><span class="hljs-comment"> * <span class="hljs-doctag">@throws</span> CloneNotSupportedException</span></span><br><span class="line"><span class="hljs-comment"> */</span></span><br><span class="line"><span class="hljs-meta">@Override</span></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">public</span> Object <span class="hljs-title">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException</span></span><br><span class="line"><span class="hljs-function"></span>&#123;</span><br><span class="line">    System.out.println(<span class="hljs-string">"具体原型复制成功！"</span>);</span><br><span class="line">    RealizeType cloneType = (RealizeType)<span class="hljs-keyword">super</span>.clone();</span><br><span class="line">    <span class="hljs-keyword">if</span>(cloneType.getList() != <span class="hljs-keyword">null</span>) &#123;</span><br><span class="line">        List&lt;String&gt; list = <span class="hljs-keyword">new</span> ArrayList&lt;&gt;();</span><br><span class="line">        <span class="hljs-keyword">for</span> (String str:cloneType.getList()) &#123;</span><br><span class="line">            list.add(str);</span><br><span class="line">        &#125;</span><br><span class="line">        cloneType.setList(list);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> cloneType;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="原型模式的应用场景"><a href="#原型模式的应用场景" class="headerlink" title="原型模式的应用场景"></a>原型模式的应用场景</h3><p>原型模式通常使用于以下场景:</p>
+<ul>
+<li>对象之间相同或相似,即只是个别的几个属性不同的时候</li>
+<li>对象的创建过程比较麻烦,但复制比较简单的时候</li>
+</ul>
 
         </div>
         
@@ -197,7 +195,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/linux/">linux</a>
+                    <a class="has-link-grey -link" href="/tags/设计模式/">设计模式</a>
                 </div>
             </div>
         </div>
@@ -218,17 +216,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2016/10/25/mysql关于锁表的监控/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">mysql关于锁表的监控</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2016/10/11/activiti入门六-集成新版Activiti-Modeler与Rest服务/">
-                <span class="level-item">activiti入门六(集成新版Activiti Modeler与Rest服务)</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2019/08/20/java设计模式之建造者模式/">
+                <span class="level-item">java设计模式之建造者模式</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -249,7 +240,7 @@
     var gitalk = new Gitalk({
         clientID: '422042c69d84f3ef6d0d',
         clientSecret: '053297d6d21b8963844801733df8e21c64adbae0',
-        id: 'fd9bc326db665d9a1a0b47a4de9eae5d',
+        id: '54c2db6b26f4f7f5402d95840604c725',
         repo: 'jonathanzhan.github.io',
         owner: 'jonathanzhan',
         admin: "jonathanzhan"
@@ -364,6 +355,37 @@
 
     
         
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#原型模式的定义与特点">
+        <span class="has-mr-6">1</span>
+        <span>原型模式的定义与特点</span>
+        </a></li><li>
+        <a class="is-flex" href="#原型模式的结构">
+        <span class="has-mr-6">2</span>
+        <span>原型模式的结构</span>
+        </a></li><li>
+        <a class="is-flex" href="#浅度克隆的实现">
+        <span class="has-mr-6">3</span>
+        <span>浅度克隆的实现</span>
+        </a></li><li>
+        <a class="is-flex" href="#深度克隆">
+        <span class="has-mr-6">4</span>
+        <span>深度克隆</span>
+        </a></li><li>
+        <a class="is-flex" href="#原型模式的应用场景">
+        <span class="has-mr-6">5</span>
+        <span>原型模式的应用场景</span>
+        </a></li></ul>
+        </div>
+    </div>
+</div>
+
     
         
 
@@ -1649,7 +1671,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!--<a class="footer-logo is-block has-mb-6" href="/">-->
                 <!---->
-                    <!--<img src="/images/logo.png" alt="ubuntu下源码安装gitlab,可汉化" height="28">-->
+                    <!--<img src="/images/logo.png" alt="java设计模式之原型模式" height="28">-->
                 <!---->
                 <!--</a>-->
                 <p class="is-size-7">
