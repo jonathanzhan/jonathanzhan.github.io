@@ -2,22 +2,22 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.8.0">
     <meta charset="utf-8">
-<title>分类: java - whatlookingfor</title>
+<title>分类: java - Jonathan&#39;s blog</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
     <meta property="og:type" content="website">
-<meta property="og:title" content="whatlookingfor">
+<meta property="og:title" content="Jonathan&#39;s blog">
 <meta property="og:url" content="http://jonathanchang.top/categories/java/page/2/index.html">
-<meta property="og:site_name" content="whatlookingfor">
+<meta property="og:site_name" content="Jonathan&#39;s blog">
 <meta property="og:locale" content="zh-CN">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="whatlookingfor">
+<meta name="twitter:title" content="Jonathan&#39;s blog">
 
 
 
-<link rel="alternative" href="/atom.xml" title="whatlookingfor" type="application/atom+xml">
+<link rel="alternative" href="/atom.xml" title="Jonathan&#39;s blog" type="application/atom+xml">
 
 
 
@@ -85,7 +85,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="whatlookingfor" height="28">
+                <img src="/images/logo.png" alt="Jonathan&#39;s blog" height="28">
             
             </a>
         </div>
@@ -109,7 +109,7 @@
                 
                     
                     
-                    <a class="navbar-item" target="_blank" title="GitHub" href="http://github.com/whatlookingfor">
+                    <a class="navbar-item" target="_blank" title="GitHub" href="http://github.com/jonathanzhan">
                         
                         <i class="fab fa-github"></i>
                         
@@ -158,7 +158,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 567 个字)
+                    3 分钟 读完 (大约 444 个字)
                 </span>
                 
             </div>
@@ -166,18 +166,21 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/">RedisTemplate的使用说明(序列化以及事物)</a>
+                <a class="has-link-black-ter" href="/2016/07/08/RedisTemplate的使用说明(常用接口方法)/">RedisTemplate使用说明(常用接口方法)</a>
             
         </h1>
         <div class="content">
-            <p>SDR官方文档中对RedisTemplate的介绍：the template is in fact the central class of the Redis module due to its rich feature set. The template offers a high-level abstraction for Redis interactions.<br>通过RedisTemplate可以调用ValueOperations,ListOperations,SetOperations,ZSetOperations等方法，分别是对Redis命令的高级封装。</p>
+            <p>在RedisTemplate中提供了几个常用的接口方法的使用，分别是:</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">private</span> ValueOperations&lt;K, V&gt; valueOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ListOperations&lt;K, V&gt; listOps;</span><br><span class="line"><span class="hljs-keyword">private</span> SetOperations&lt;K, V&gt; setOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ZSetOperations&lt;K, V&gt; zSetOps;</span><br></pre></td></tr></table></figure>
+
+<p>本文主要讲解几个接口的使用。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2016/07/08/RedisTemplate的使用说明(常用接口方法)/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -209,7 +212,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 444 个字)
+                    4 分钟 读完 (大约 567 个字)
                 </span>
                 
             </div>
@@ -217,21 +220,18 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2016/07/08/RedisTemplate的使用说明(常用接口方法)/">RedisTemplate使用说明(常用接口方法)</a>
+                <a class="has-link-black-ter" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/">RedisTemplate的使用说明(序列化以及事物)</a>
             
         </h1>
         <div class="content">
-            <p>在RedisTemplate中提供了几个常用的接口方法的使用，分别是:</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">private</span> ValueOperations&lt;K, V&gt; valueOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ListOperations&lt;K, V&gt; listOps;</span><br><span class="line"><span class="hljs-keyword">private</span> SetOperations&lt;K, V&gt; setOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ZSetOperations&lt;K, V&gt; zSetOps;</span><br></pre></td></tr></table></figure>
-
-<p>本文主要讲解几个接口的使用。</p>
+            <p>SDR官方文档中对RedisTemplate的介绍：the template is in fact the central class of the Redis module due to its rich feature set. The template offers a high-level abstraction for Redis interactions.<br>通过RedisTemplate可以调用ValueOperations,ListOperations,SetOperations,ZSetOperations等方法，分别是对Redis命令的高级封装。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2016/07/08/RedisTemplate的使用说明(常用接口方法)/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -741,20 +741,20 @@
             </div>
         </nav>
         <div class="level">
-            <a class="level-item button is-link is-rounded" href="http://github.com/whatlookingfor">
+            <a class="level-item button is-link is-rounded" href="http://github.com/jonathanzhan">
                 关注我</a>
         </div>
         
         
         <div class="level is-mobile">
             
-            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/whatlookingfor">
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/jonathanzhan">
                 
                 <i class="fab fa-github"></i>
                 
             </a>
             
-            <a class="level-item button is-white is-marginless" target="_blank" title="Gitee" href="http://git.oschina.net/whatlookingfor">
+            <a class="level-item button is-white is-marginless" target="_blank" title="Gitee" href="http://git.oschina.net/jonathanchang">
                 
                 <i class="fab fa-git-square"></i>
                 
@@ -791,7 +791,7 @@
         <ul class="menu-list">
         
             <li>
-                <a class="level is-mobile" href="https://www.gitbook.com/whatlookingfor" target="_blank">
+                <a class="level is-mobile" href="https://www.gitbook.com/jonathanzhan" target="_blank">
                     <span class="level-left">
                         <span class="level-item">GitBook</span>
                     </span>
@@ -808,6 +808,17 @@
                     </span>
                     <!--<span class="level-right">-->
                         <!--<span class="level-item tag">es6.ruanyifeng.com</span>-->
+                    <!--</span>-->
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://blog.csdn.net/whatlookingfor" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CSDN</span>
+                    </span>
+                    <!--<span class="level-right">-->
+                        <!--<span class="level-item tag">blog.csdn.net</span>-->
                     <!--</span>-->
                 </a>
             </li>
@@ -2064,7 +2075,7 @@
             <div class="level-start has-text-centered-mobile">
                 <!--<a class="footer-logo is-block has-mb-6" href="/">-->
                 <!---->
-                    <!--<img src="/images/logo.png" alt="whatlookingfor" height="28">-->
+                    <!--<img src="/images/logo.png" alt="Jonathan&#39;s blog" height="28">-->
                 <!---->
                 <!--</a>-->
                 <p class="is-size-7">
@@ -2094,7 +2105,7 @@
                 </p>
                 
                 <p class="control">
-                    <a class="button is-white is-large" target="_blank" title="GitHub" href="http://github.com/whatlookingfor">
+                    <a class="button is-white is-large" target="_blank" title="GitHub" href="http://github.com/jonathanzhan">
                         
                         <i class="fab fa-github"></i>
                         
