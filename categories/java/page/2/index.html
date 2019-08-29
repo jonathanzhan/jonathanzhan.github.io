@@ -158,7 +158,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分钟 读完 (大约 444 个字)
+                    4 分钟 读完 (大约 567 个字)
                 </span>
                 
             </div>
@@ -166,21 +166,18 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2016/07/08/RedisTemplate的使用说明(常用接口方法)/">RedisTemplate使用说明(常用接口方法)</a>
+                <a class="has-link-black-ter" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/">RedisTemplate的使用说明(序列化以及事物)</a>
             
         </h1>
         <div class="content">
-            <p>在RedisTemplate中提供了几个常用的接口方法的使用，分别是:</p>
-<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">private</span> ValueOperations&lt;K, V&gt; valueOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ListOperations&lt;K, V&gt; listOps;</span><br><span class="line"><span class="hljs-keyword">private</span> SetOperations&lt;K, V&gt; setOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ZSetOperations&lt;K, V&gt; zSetOps;</span><br></pre></td></tr></table></figure>
-
-<p>本文主要讲解几个接口的使用。</p>
+            <p>SDR官方文档中对RedisTemplate的介绍：the template is in fact the central class of the Redis module due to its rich feature set. The template offers a high-level abstraction for Redis interactions.<br>通过RedisTemplate可以调用ValueOperations,ListOperations,SetOperations,ZSetOperations等方法，分别是对Redis命令的高级封装。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2016/07/08/RedisTemplate的使用说明(常用接口方法)/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -212,7 +209,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分钟 读完 (大约 567 个字)
+                    3 分钟 读完 (大约 444 个字)
                 </span>
                 
             </div>
@@ -220,18 +217,21 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/">RedisTemplate的使用说明(序列化以及事物)</a>
+                <a class="has-link-black-ter" href="/2016/07/08/RedisTemplate的使用说明(常用接口方法)/">RedisTemplate使用说明(常用接口方法)</a>
             
         </h1>
         <div class="content">
-            <p>SDR官方文档中对RedisTemplate的介绍：the template is in fact the central class of the Redis module due to its rich feature set. The template offers a high-level abstraction for Redis interactions.<br>通过RedisTemplate可以调用ValueOperations,ListOperations,SetOperations,ZSetOperations等方法，分别是对Redis命令的高级封装。</p>
+            <p>在RedisTemplate中提供了几个常用的接口方法的使用，分别是:</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">private</span> ValueOperations&lt;K, V&gt; valueOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ListOperations&lt;K, V&gt; listOps;</span><br><span class="line"><span class="hljs-keyword">private</span> SetOperations&lt;K, V&gt; setOps;</span><br><span class="line"><span class="hljs-keyword">private</span> ZSetOperations&lt;K, V&gt; zSetOps;</span><br></pre></td></tr></table></figure>
+
+<p>本文主要讲解几个接口的使用。</p>
         </div>
         
         
         <div class="level is-mobile">
             <div class="level-start">
                 <div class="level-item">
-                <a class="button is-size-7 is-light" href="/2016/07/08/RedisTemplate的使用说明(序列化以及事物)/#more">阅读更多</a>
+                <a class="button is-size-7 is-light" href="/2016/07/08/RedisTemplate的使用说明(常用接口方法)/#more">阅读更多</a>
                 </div>
             </div>
         </div>
@@ -715,7 +715,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        79
+                        80
                     </p>
                 </div>
             </div>
@@ -916,7 +916,7 @@
                 <span class="level-item">设计模式</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">8</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/运维实施/">
@@ -955,6 +955,25 @@
         
         <article class="media">
             
+            <a href="/2019/08/29/java设计模式之代理模式/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java设计模式之代理模式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T06:12:04.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/java设计模式之代理模式/" class="has-link-black-ter is-size-6">java设计模式之代理模式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/设计模式/">设计模式</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/08/20/java设计模式之原型模式/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="java设计模式之原型模式">
@@ -1029,25 +1048,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/30/java设计模式之工厂模式/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java设计模式之工厂模式">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-30T09:31:27.000Z">2019-07-30</time></div>
-                    <a href="/2019/07/30/java设计模式之工厂模式/" class="has-link-black-ter is-size-6">java设计模式之工厂模式</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/设计模式/">设计模式</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1066,7 +1066,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -1483,7 +1483,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/设计模式/">
                         <span class="tag">设计模式</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1519,6 +1519,25 @@
         
         <article class="media">
             
+            <a href="/2019/08/29/java设计模式之代理模式/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java设计模式之代理模式">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T06:12:04.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/java设计模式之代理模式/" class="has-link-black-ter is-size-6">java设计模式之代理模式</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/设计模式/">设计模式</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2019/08/20/java设计模式之原型模式/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="java设计模式之原型模式">
@@ -1593,25 +1612,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2019/07/30/java设计模式之工厂模式/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java设计模式之工厂模式">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-07-30T09:31:27.000Z">2019-07-30</time></div>
-                    <a href="/2019/07/30/java设计模式之工厂模式/" class="has-link-black-ter is-size-6">java设计模式之工厂模式</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/设计模式/">设计模式</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1630,7 +1630,7 @@
                     <span class="level-item">八月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -2047,7 +2047,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/设计模式/">
                         <span class="tag">设计模式</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
