@@ -1,0 +1,1978 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>JVM常用总结3之常量池 - Jonathan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="本文主要介绍常量池的一些概念定义以及常见的问题,基于JDK1.8+">
+<meta name="keywords" content="java基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM常用总结3之常量池">
+<meta property="og:url" content="http://jonathanchang.top/2020/07/07/JVM常用总结3之常量池/index.html">
+<meta property="og:site_name" content="Jonathan&#39;s blog">
+<meta property="og:description" content="本文主要介绍常量池的一些概念定义以及常见的问题,基于JDK1.8+">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://jonathanchang.top/files/java/JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png">
+<meta property="og:updated_time" content="2020-12-05T10:23:57.319Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM常用总结3之常量池">
+<meta name="twitter:description" content="本文主要介绍常量池的一些概念定义以及常见的问题,基于JDK1.8+">
+<meta name="twitter:image" content="http://jonathanchang.top/files/java/JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png">
+
+
+
+<link rel="alternative" href="/atom.xml" title="JVM常用总结3之常量池" type="application/atom+xml">
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="JVM常用总结3之常量池" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">首页</a>
+                
+                <a class="navbar-item" href="/archives">归档</a>
+                
+                <a class="navbar-item" href="/categories">分类</a>
+                
+                <a class="navbar-item" href="/tags">标签</a>
+                
+                <a class="navbar-item" href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="GitHub" href="http://github.com/jonathanzhan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-07-07T05:35:05.000Z">2020-07-07</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    19 分钟 读完 (大约 2781 个字)
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                JVM常用总结3之常量池
+            
+        </h1>
+        <div class="content">
+            <p>本文主要介绍常量池的一些概念定义以及常见的问题,基于JDK1.8+</p>
+<a id="more"></a>
+
+<h3 id="class常量池-运行时常量池-字符串常量池"><a href="#class常量池-运行时常量池-字符串常量池" class="headerlink" title="class常量池,运行时常量池,字符串常量池"></a>class常量池,运行时常量池,字符串常量池</h3><p>首先看下JVM的内存模型</p>
+<p><img src="/files/java/JVM%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B.png" alt="JVM内存模型"></p>
+<h4 id="class常量池"><a href="#class常量池" class="headerlink" title="class常量池"></a>class常量池</h4><p>Class常量池可以理解为class文件中的资源仓库,class文件中除了包含类的版本,字段,方法,接口等描述信息外,还有一项信息就是常量池,用于存放编译器生成的各种字面量和符号引用.</p>
+<h5 id="字面量"><a href="#字面量" class="headerlink" title="字面量"></a>字面量</h5><p>字面量就是指有字母,数字等构成的字符串或者数值常量.字面量只可以出现在=右边.<br>如以下代码,=右边的都是字面量</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> a = <span class="hljs-number">1</span>;</span><br><span class="line"><span class="hljs-keyword">int</span> b = <span class="hljs-number">2</span>;</span><br><span class="line">String c = <span class="hljs-string">"asd"</span>;</span><br><span class="line">String d = <span class="hljs-string">"sdf"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>字面量包括以下几种：</p>
+<ol>
+<li>文本字符串</li>
+<li>八种基本类型的值</li>
+<li>被声明为final的常量等</li>
+</ol>
+<h5 id="符号引用"><a href="#符号引用" class="headerlink" title="符号引用"></a>符号引用</h5><p>符号引用是编译原理的概念,主要包括以下三类常量:</p>
+<ul>
+<li>类和接口的全限定名</li>
+<li>字段的名称和描述符</li>
+<li>方法的名称和描述符</li>
+</ul>
+<p>上面代码中的 a,b,c,d 就是字段名称,是一种符号引用.</p>
+<p>比如某个class类通过Javap反编译后,在常量池里的<code>Lcom/test/test</code> 是类的全限定名,里面的方法名,还有一些UTF8的格式描述符等,都是符号引用.</p>
+<h4 id="运行时常量池"><a href="#运行时常量池" class="headerlink" title="运行时常量池"></a>运行时常量池</h4><p>以上的这些常量池(符号引用,字面量)现在是静态信息,只有到运行时被加载到内存后,这些符号才有对应的内存地址信息,这些常量池一旦被加载到内存中,就会变为<code>运行时常量池</code>, 对应的符号引用在程序加载或运行时会被转换为被加载到内存区域的代码的直接引用,也就是我们说的动态链接例如方法test()这个符号引用在运行时就会被转换为test()方法具体代码在内存中的地址,主要通过对象头里的类型指针去转换直接引用.</p>
+<h4 id="字符串常量池"><a href="#字符串常量池" class="headerlink" title="字符串常量池"></a>字符串常量池</h4><h5 id="字符串常量池的设计思想"><a href="#字符串常量池的设计思想" class="headerlink" title="字符串常量池的设计思想"></a>字符串常量池的设计思想</h5><p>JVM为了提高性能和减少内存开销,在实例化字符串常量时进行了一些优化</p>
+<ul>
+<li>为字符串单独开辟一个字符串常量池,类似于缓存区</li>
+<li>创建字符串常量池时,首先查询字符串常量池中是否有该字符串</li>
+<li>存在该字符串,则返回引用实例,不存在,实例化该字符串并放入字符串常量池中.</li>
+</ul>
+<p>在jdk1.6及之前内存区域中有永久代, 运行时常量池在永久代，运行时常量池包含字符串常量池</p>
+<p>Jdk1.7：有永久代，但已经逐步“去永久代”，字符串常量池从永久代里的运行时常量池分离到堆里</p>
+<p>Jdk1.8及之后:无永久代，运行时常量池在元空间，字符串常量池里依然在堆里</p>
+<h5 id="字符串常用操作"><a href="#字符串常用操作" class="headerlink" title="字符串常用操作"></a>字符串常用操作</h5><p>(1) 直接赋值字符串</p>
+<p><code>String s = &quot;helloworld&quot; // s指向常量池中的引用</code><br>这种方式创建的字符串对象,只会在常量池中,因为有<code>helloworld</code> 这个字面量,创建s对象时,JVM会先去常量池中通过<code>equals(key)</code>方法,判断是否有相同对象,如果有,直接返回该对象在常量池的引用,如果没有,则在常量池中创建一个新对象,再返回引用</p>
+<p>(2) new String()操作</p>
+<p><code>String s1 = new String(&quot;helloworld&quot;) //s1指向内存中的对象引用</code></p>
+<p>这种方式保证字符串常量池和堆中都有这个对象,没有就创建,最后返回堆内存中的对象引用.</p>
+<p>步骤大致如下:</p>
+<ul>
+<li>因为有<code>helloworld</code>这个字面量,所以先会检查常量池中是否存在字符串<code>helloworld</code></li>
+<li>如果不存在,先在字符串常量池中创建一个字符串对象,再去堆内存中创建一个字符串对象<code>helloworld</code></li>
+<li>存在的话,直接去堆内存中创建一个字符串对象<code>helloworld</code></li>
+<li>最后返回内存中的引用</li>
+</ul>
+<p>(3) intern方法</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">String s1 = <span class="hljs-keyword">new</span> String(<span class="hljs-string">"helloworld"</span>);</span><br><span class="line">String s2 = s1.intern();</span><br><span class="line">System.out.print(s1==s2); <span class="hljs-comment">//false</span></span><br></pre></td></tr></table></figure>
+
+<p>String 中的intern方法是一个native方法,当调用intern方法时,如果常量池中已经包含了一个等于此String 对象的字符串(用equals方法确定),则返回常量池中的字符串.否则,将intern返回的引用指向当前字符串s1.(JDK1.7 1.8会将堆内存中的s1的引用放到常量池中,JDK1.6会将s1复制到常量池中)</p>
+<p>参考以下代码</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String s1 = <span class="hljs-keyword">new</span> String(<span class="hljs-string">"he"</span>)+<span class="hljs-keyword">new</span> String(<span class="hljs-string">"llo"</span>);</span><br><span class="line">String s2 = s1.intern();</span><br><span class="line">System.out.print(s1==s2);</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// 在 JDK 1.6 下输出是 false，创建了 6 个对象</span></span><br><span class="line"><span class="hljs-comment">// 在 JDK 1.7 及以上的版本输出是 true，创建了 5 个对象</span></span><br></pre></td></tr></table></figure>
+
+<p>首先在常量池中创建了两个对象<code>he</code>和<code>llo</code>,接下来在堆中同样创建了两个对象<code>he</code>和<code>llo</code>,然后在堆中创建了<code>hello</code>的对象.</p>
+<p>在JDK1.6中,因为此时常量池中没有<code>hello</code>,所以会先将<code>hello</code>对象复制到常量池中,然后返回的是常量池中的对象.</p>
+<p>在JDK1.7及以上,常量池中没有<code>hello</code>,所以s2直接指向了s1字符串的引用,因此s1==s2</p>
+<p>(4) 常见实例</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String s0 = <span class="hljs-string">"asdf"</span>;</span><br><span class="line">String s1 = <span class="hljs-string">"asdf"</span>;</span><br><span class="line">String s2 = <span class="hljs-string">"as"</span>+<span class="hljs-string">"df"</span>;</span><br><span class="line">System.out.println( s0==s1 ); <span class="hljs-comment">//true</span></span><br><span class="line">System.out.println( s0==s2 ); <span class="hljs-comment">//true</span></span><br></pre></td></tr></table></figure>
+
+<p>因为例子中的 s0和s1中的”asdf”都是字符串常量，它们在编译期就被确定了,所以s0=s1,而”as”和”df”也都是字符串常量，当一个字符串由多个字符串常量连接而成时，它自己肯定也是字符串常量，所以s2也同样在编译期就被优化为一个字符串常量”asdf”，所以s2也是常量池中” asdf”的一个引用。所以我们得出s0==s1==s2</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">String s0=<span class="hljs-string">"hello"</span>;</span><br><span class="line">String s1=<span class="hljs-keyword">new</span> String(<span class="hljs-string">"hello"</span>);</span><br><span class="line">String s2=<span class="hljs-string">"he"</span> + <span class="hljs-keyword">new</span> String(<span class="hljs-string">"llo"</span>);</span><br><span class="line">System.out.println( s0==s1 ); <span class="hljs-comment">//false</span></span><br><span class="line">System.out.println( s0==s2 ); <span class="hljs-comment">//false</span></span><br><span class="line">System.out.println( s1==s2 ); <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>用<code>new String()</code>创建的字符串不是常量，不能在编译期就确定，所以<code>new String()</code>创建的字符串不放入常量池中，它们有自己的地址空间</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="hljs-string">"a1"</span>;</span><br><span class="line">String b = <span class="hljs-string">"a"</span> + <span class="hljs-number">1</span>;</span><br><span class="line">System.out.println(a == b); <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">String a = <span class="hljs-string">"atrue"</span>;</span><br><span class="line">String b = <span class="hljs-string">"a"</span> + <span class="hljs-string">"true"</span>;</span><br><span class="line">System.out.println(a == b); <span class="hljs-comment">// true</span></span><br><span class="line"></span><br><span class="line">String a = <span class="hljs-string">"a3.4"</span>;</span><br><span class="line">String b = <span class="hljs-string">"a"</span> + <span class="hljs-number">3.4</span>;</span><br><span class="line">System.out.println(a == b); <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>JVM对于字符串常量的”+”号连接，将在程序编译期，JVM就将常量字符串的”+”连接优化为连接后的值</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="hljs-string">"ab"</span>;</span><br><span class="line">String bb = <span class="hljs-string">"b"</span>;</span><br><span class="line">String b = <span class="hljs-string">"a"</span> + bb;</span><br><span class="line"></span><br><span class="line">System.out.println(a == b); <span class="hljs-comment">// false</span></span><br></pre></td></tr></table></figure>
+
+<p>JVM对于字符串引用，由于在字符串的”+”连接中，有字符串引用存在，而引用的值在程序编译期是无法确定的，即”a” + bb无法被编译器优化，只有在程序运行期来动态分配并将连接后的新地址赋给b。所以上面程序的结果也就为false。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="hljs-string">"ab"</span>;</span><br><span class="line"><span class="hljs-keyword">final</span> String bb = <span class="hljs-string">"b"</span>;</span><br><span class="line">String b = <span class="hljs-string">"a"</span> + bb;</span><br><span class="line">System.out.println(a == b); <span class="hljs-comment">// true</span></span><br></pre></td></tr></table></figure>
+
+<p>和上面示例中唯一不同的是bb字符串加了final修饰，对于final修饰的变量，它在编译时被解析为常量值的一个本地拷贝存储到自己的常量池中或嵌入到它的字节码流中。所以此时的”a” + bb和”a” + “b”效果是一样的。故上面程序的结果为true。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">String a = <span class="hljs-string">"ab"</span>;</span><br><span class="line"><span class="hljs-keyword">final</span> String bb = getBB();</span><br><span class="line">String b = <span class="hljs-string">"a"</span> + bb;</span><br><span class="line"></span><br><span class="line">System.out.println(a == b); <span class="hljs-comment">// false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> String <span class="hljs-title">getBB</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>&#123;  </span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">"b"</span>;  </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>JVM对于字符串引用bb，它的值在编译期无法确定，只有在程序运行期调用方法后，将方法的返回值和”a”来动态连接并分配地址为b，故上面程序的结果为false</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">String  s  =  <span class="hljs-string">"a"</span> + <span class="hljs-string">"b"</span> + <span class="hljs-string">"c"</span>;  <span class="hljs-comment">//就等价于String s = "abc";</span></span><br><span class="line">String  a  =  <span class="hljs-string">"a"</span>;</span><br><span class="line">String  b  =  <span class="hljs-string">"b"</span>;</span><br><span class="line">String  c  =  <span class="hljs-string">"c"</span>;</span><br><span class="line">String  s1  =   a  +  b  +  c;</span><br></pre></td></tr></table></figure>
+
+<p>通过观察其JVM指令码发现s1的”+”操作会变成如下操作：</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">StringBuilder temp = <span class="hljs-keyword">new</span> StringBuilder();</span><br><span class="line">temp.append(a).append(b).append(c);</span><br><span class="line">String s = temp.toString();</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="hljs-comment">//字符串常量池："计算机"和"技术"     堆内存：str1引用的对象"计算机技术"  </span></span><br><span class="line"><span class="hljs-comment">//堆内存中还有个StringBuilder的对象，但是会被gc回收，StringBuilder的toString方法会new String()，这个String才是真正返回的对象引用</span></span><br><span class="line">String str2 = <span class="hljs-keyword">new</span> StringBuilder(<span class="hljs-string">"计算机"</span>).append(<span class="hljs-string">"技术"</span>).toString();   <span class="hljs-comment">//没有出现"计算机技术"字面量，所以不会在常量池里生成"计算机技术"对象</span></span><br><span class="line">System.out.println(str2 == str2.intern());  <span class="hljs-comment">//true</span></span><br><span class="line"><span class="hljs-comment">//"计算机技术" 在池中没有，但是在heap中存在，则intern时，会直接返回该heap中的引用</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//字符串常量池："ja"和"va"     堆内存：str1引用的对象"java"  </span></span><br><span class="line"><span class="hljs-comment">//堆内存中还有个StringBuilder的对象，但是会被gc回收，StringBuilder的toString方法会new String()，这个String才是真正返回的对象引用</span></span><br><span class="line">String str1 = <span class="hljs-keyword">new</span> StringBuilder(<span class="hljs-string">"ja"</span>).append(<span class="hljs-string">"va"</span>).toString();    <span class="hljs-comment">//没有出现"java"字面量，所以不会在常量池里生成"java"对象</span></span><br><span class="line">System.out.println(str1 == str1.intern());  <span class="hljs-comment">//false</span></span><br><span class="line"><span class="hljs-comment">//java是关键字，在JVM初始化的相关类里肯定早就放进字符串常量池了</span></span><br><span class="line"></span><br><span class="line">String s1=<span class="hljs-keyword">new</span> String(<span class="hljs-string">"test"</span>);  </span><br><span class="line">System.out.println(s1==s1.intern());   <span class="hljs-comment">//false</span></span><br><span class="line"><span class="hljs-comment">//"test"作为字面量，放入了池中，而new时s1指向的是heap中新生成的string对象，s1.intern()指向的是"test"字面量之前在池中生成的字符串对象</span></span><br><span class="line"></span><br><span class="line">String s2=<span class="hljs-keyword">new</span> StringBuilder(<span class="hljs-string">"abc"</span>).toString();</span><br><span class="line">System.out.println(s2==s2.intern());  <span class="hljs-comment">//false 同上</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="八种基本类型的包装类和对象池"><a href="#八种基本类型的包装类和对象池" class="headerlink" title="八种基本类型的包装类和对象池"></a>八种基本类型的包装类和对象池</h4><p>java中基本类型的包装类的大部分都实现了常量池技术(严格来说应该叫对象池，在堆上)，这些类是Byte,Short,Integer,Long,Character,Boolean,另外两种浮点数类型的包装类则没有实现.另外Byte,Short,Integer,Long,Character这5种整型的包装类也只是在对应值小于等于127时才可使用对象池，也即对象不负责创建和管理大于127的这些类的对象。</p>
+<figure class="highlight java hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">//5种整形的包装类Byte,Short,Integer,Long,Character的对象，  </span></span><br><span class="line"><span class="hljs-comment">//在值小于127时可以使用对象池  </span></span><br><span class="line">Integer i1 = <span class="hljs-number">127</span>;  <span class="hljs-comment">//这种调用底层实际是执行的Integer.valueOf(127)，里面用到了IntegerCache对象池</span></span><br><span class="line">Integer i2 = <span class="hljs-number">127</span>;</span><br><span class="line">System.out.println(i1 == i2);<span class="hljs-comment">//输出true  </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//值大于127时，不会从对象池中取对象  </span></span><br><span class="line">Integer i3 = <span class="hljs-number">128</span>;</span><br><span class="line">Integer i4 = <span class="hljs-number">128</span>;</span><br><span class="line">System.out.println(i3 == i4);<span class="hljs-comment">//输出false  </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//用new关键词新生成对象不会使用对象池</span></span><br><span class="line">Integer i5 = <span class="hljs-keyword">new</span> Integer(<span class="hljs-number">127</span>);  </span><br><span class="line">Integer i6 = <span class="hljs-keyword">new</span> Integer(<span class="hljs-number">127</span>);</span><br><span class="line">System.out.println(i5 == i6);<span class="hljs-comment">//输出false</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//Boolean类也实现了对象池技术  </span></span><br><span class="line">Boolean bool1 = <span class="hljs-keyword">true</span>;</span><br><span class="line">Boolean bool2 = <span class="hljs-keyword">true</span>;</span><br><span class="line">System.out.println(bool1 == bool2);<span class="hljs-comment">//输出true  </span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">//浮点类型的包装类没有实现对象池技术  </span></span><br><span class="line">Double d1 = <span class="hljs-number">1.0</span>;</span><br><span class="line">Double d2 = <span class="hljs-number">1.0</span>;</span><br><span class="line">System.out.println(d1 == d2);<span class="hljs-comment">//输出false</span></span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/java基础/">java基础</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/07/04/JVM常用总结2之垃圾回收/">
+                <span class="level-item">JVM常用总结2之垃圾回收</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '422042c69d84f3ef6d0d',
+        clientSecret: '053297d6d21b8963844801733df8e21c64adbae0',
+        id: '5b381261d149b6ecd380b577c0ac06e8',
+        repo: 'jonathanzhan.github.io',
+        owner: 'jonathanzhan',
+        admin: "jonathanzhan"
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    <img class="image is-128x128 has-mb-6" style="border-radius: 50%;" src="/images/avatar.jpg" alt="Jonathan">
+                    
+                    <p class="is-size-4 is-block">
+                        Jonathan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Java Web Developer &amp; Programmer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;An, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        85
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        12
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        24
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/jonathanzhan">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/jonathanzhan">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Gitee" href="http://git.oschina.net/jonathanchang">
+                
+                <i class="fab fa-git-square"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Twitter" href="https://twitter.com/jonathan_zhan">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/atom.xml">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#class常量池-运行时常量池-字符串常量池">
+        <span class="has-mr-6">1</span>
+        <span>class常量池,运行时常量池,字符串常量池</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#class常量池">
+        <span class="has-mr-6">1.1</span>
+        <span>class常量池</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#字面量">
+        <span class="has-mr-6">1.1.1</span>
+        <span>字面量</span>
+        </a></li><li>
+        <a class="is-flex" href="#符号引用">
+        <span class="has-mr-6">1.1.2</span>
+        <span>符号引用</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#运行时常量池">
+        <span class="has-mr-6">1.2</span>
+        <span>运行时常量池</span>
+        </a></li><li>
+        <a class="is-flex" href="#字符串常量池">
+        <span class="has-mr-6">1.3</span>
+        <span>字符串常量池</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#字符串常量池的设计思想">
+        <span class="has-mr-6">1.3.1</span>
+        <span>字符串常量池的设计思想</span>
+        </a></li><li>
+        <a class="is-flex" href="#字符串常用操作">
+        <span class="has-mr-6">1.3.2</span>
+        <span>字符串常用操作</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#八种基本类型的包装类和对象池">
+        <span class="has-mr-6">1.4</span>
+        <span>八种基本类型的包装类和对象池</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://www.gitbook.com/jonathanzhan" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">GitBook</span>
+                    </span>
+                    <!--<span class="level-right">-->
+                        <!--<span class="level-item tag">www.gitbook.com</span>-->
+                    <!--</span>-->
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="http://es6.ruanyifeng.com" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">ECMAScript6入门</span>
+                    </span>
+                    <!--<span class="level-right">-->
+                        <!--<span class="level-item tag">es6.ruanyifeng.com</span>-->
+                    <!--</span>-->
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://blog.csdn.net/whatlookingfor" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CSDN</span>
+                    </span>
+                    <!--<span class="level-right">-->
+                        <!--<span class="level-item tag">blog.csdn.net</span>-->
+                    <!--</span>-->
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Java/">
+            <span class="level-start">
+                <span class="level-item">Java</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Spring/">
+            <span class="level-start">
+                <span class="level-item">Spring</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/activiti/">
+            <span class="level-start">
+                <span class="level-item">activiti</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">12</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/java/">
+            <span class="level-start">
+                <span class="level-item">java</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">21</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/前端设计/">
+            <span class="level-start">
+                <span class="level-item">前端设计</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/奇文共赏/">
+            <span class="level-start">
+                <span class="level-item">奇文共赏</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/建站/">
+            <span class="level-start">
+                <span class="level-item">建站</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/微服务/">
+            <span class="level-start">
+                <span class="level-item">微服务</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/数据库/">
+            <span class="level-start">
+                <span class="level-item">数据库</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/框架整合/">
+            <span class="level-start">
+                <span class="level-item">框架整合</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/设计模式/">
+            <span class="level-start">
+                <span class="level-item">设计模式</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/运维实施/">
+            <span class="level-start">
+                <span class="level-item">运维实施</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">13</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Spring/" style="font-size: 11.25px;">Spring</a> <a href="/tags/Spring-core/" style="font-size: 10px;">Spring core</a> <a href="/tags/SpringBoot/" style="font-size: 12.5px;">SpringBoot</a> <a href="/tags/SpringMvc/" style="font-size: 11.25px;">SpringMvc</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/activiti/" style="font-size: 20px;">activiti</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/java基础/" style="font-size: 17.5px;">java基础</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 18.75px;">linux</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/maven/" style="font-size: 12.5px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.25px;">mysql</a> <a href="/tags/node/" style="font-size: 13.75px;">node</a> <a href="/tags/oracle/" style="font-size: 13.75px;">oracle</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/thymeleaf/" style="font-size: 15px;">thymeleaf</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/zookeeper/" style="font-size: 12.5px;">zookeeper</a> <a href="/tags/开发工具/" style="font-size: 10px;">开发工具</a> <a href="/tags/设计模式/" style="font-size: 17.5px;">设计模式</a> <a href="/tags/闲谈/" style="font-size: 10px;">闲谈</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/07/07/JVM常用总结3之常量池/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结3之常量池">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-07T05:35:05.000Z">2020-07-07</time></div>
+                    <a href="/2020/07/07/JVM常用总结3之常量池/" class="has-link-black-ter is-size-6">JVM常用总结3之常量池</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/04/JVM常用总结2之垃圾回收/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结2之垃圾回收">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-04T09:35:05.000Z">2020-07-04</time></div>
+                    <a href="/2020/07/04/JVM常用总结2之垃圾回收/" class="has-link-black-ter is-size-6">JVM常用总结2之垃圾回收</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/02/JVM常用总结1之JVM组成/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结1之JVM组成">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-02T09:15:03.000Z">2020-07-02</time></div>
+                    <a href="/2020/07/02/JVM常用总结1之JVM组成/" class="has-link-black-ter is-size-6">JVM常用总结1之JVM组成</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/23/mysql日期时间类型/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="mysql日期时间类型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-23T08:04:35.000Z">2020-05-23</time></div>
+                    <a href="/2020/05/23/mysql日期时间类型/" class="has-link-black-ter is-size-6">mysql日期时间类型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/数据库/">数据库</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/29/java动态代理InvocationHandler和Proxy详解/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java动态代理InvocationHandler和Proxy详解">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T07:52:40.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/java动态代理InvocationHandler和Proxy详解/" class="has-link-black-ter is-size-6">java动态代理InvocationHandler和Proxy详解</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/java/">java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">12</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2015/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2015</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2014/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2014</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spring/">
+                        <span class="tag">Spring</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spring-core/">
+                        <span class="tag">Spring core</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/SpringBoot/">
+                        <span class="tag">SpringBoot</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/SpringMvc/">
+                        <span class="tag">SpringMvc</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/UML/">
+                        <span class="tag">UML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/activiti/">
+                        <span class="tag">activiti</span>
+                        <span class="tag is-grey">12</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/java基础/">
+                        <span class="tag">java基础</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jstl/">
+                        <span class="tag">jstl</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/linux/">
+                        <span class="tag">linux</span>
+                        <span class="tag is-grey">11</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/markdown/">
+                        <span class="tag">markdown</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/maven/">
+                        <span class="tag">maven</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mybatis/">
+                        <span class="tag">mybatis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mysql/">
+                        <span class="tag">mysql</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/node/">
+                        <span class="tag">node</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/oracle/">
+                        <span class="tag">oracle</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/redis/">
+                        <span class="tag">redis</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/thymeleaf/">
+                        <span class="tag">thymeleaf</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/windows/">
+                        <span class="tag">windows</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/zookeeper/">
+                        <span class="tag">zookeeper</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/开发工具/">
+                        <span class="tag">开发工具</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/设计模式/">
+                        <span class="tag">设计模式</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/闲谈/">
+                        <span class="tag">闲谈</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/07/07/JVM常用总结3之常量池/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结3之常量池">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-07T05:35:05.000Z">2020-07-07</time></div>
+                    <a href="/2020/07/07/JVM常用总结3之常量池/" class="has-link-black-ter is-size-6">JVM常用总结3之常量池</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/04/JVM常用总结2之垃圾回收/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结2之垃圾回收">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-04T09:35:05.000Z">2020-07-04</time></div>
+                    <a href="/2020/07/04/JVM常用总结2之垃圾回收/" class="has-link-black-ter is-size-6">JVM常用总结2之垃圾回收</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/02/JVM常用总结1之JVM组成/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结1之JVM组成">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-02T09:15:03.000Z">2020-07-02</time></div>
+                    <a href="/2020/07/02/JVM常用总结1之JVM组成/" class="has-link-black-ter is-size-6">JVM常用总结1之JVM组成</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/23/mysql日期时间类型/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="mysql日期时间类型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-23T08:04:35.000Z">2020-05-23</time></div>
+                    <a href="/2020/05/23/mysql日期时间类型/" class="has-link-black-ter is-size-6">mysql日期时间类型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/数据库/">数据库</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/29/java动态代理InvocationHandler和Proxy详解/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java动态代理InvocationHandler和Proxy详解">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T07:52:40.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/java动态代理InvocationHandler和Proxy详解/" class="has-link-black-ter is-size-6">java动态代理InvocationHandler和Proxy详解</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/java/">java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">12</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2015/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2015</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2014/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2014</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spring/">
+                        <span class="tag">Spring</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spring-core/">
+                        <span class="tag">Spring core</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/SpringBoot/">
+                        <span class="tag">SpringBoot</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/SpringMvc/">
+                        <span class="tag">SpringMvc</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/UML/">
+                        <span class="tag">UML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/activiti/">
+                        <span class="tag">activiti</span>
+                        <span class="tag is-grey">12</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/java基础/">
+                        <span class="tag">java基础</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jstl/">
+                        <span class="tag">jstl</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/linux/">
+                        <span class="tag">linux</span>
+                        <span class="tag is-grey">11</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/markdown/">
+                        <span class="tag">markdown</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/maven/">
+                        <span class="tag">maven</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mybatis/">
+                        <span class="tag">mybatis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mysql/">
+                        <span class="tag">mysql</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/node/">
+                        <span class="tag">node</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/oracle/">
+                        <span class="tag">oracle</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/redis/">
+                        <span class="tag">redis</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/thymeleaf/">
+                        <span class="tag">thymeleaf</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/windows/">
+                        <span class="tag">windows</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/zookeeper/">
+                        <span class="tag">zookeeper</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/开发工具/">
+                        <span class="tag">开发工具</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/设计模式/">
+                        <span class="tag">设计模式</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/闲谈/">
+                        <span class="tag">闲谈</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!--<a class="footer-logo is-block has-mb-6" href="/">-->
+                <!---->
+                    <!--<img src="/images/logo.png" alt="JVM常用总结3之常量池" height="28">-->
+                <!---->
+                <!--</a>-->
+                <p class="is-size-7">
+                &copy; 2020 Jonathan&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="GitHub" href="http://github.com/jonathanzhan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

@@ -1,0 +1,2065 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.8.0">
+    <meta charset="utf-8">
+<title>JVM常用总结2之垃圾回收 - Jonathan&#39;s blog</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+    <meta name="description" content="上篇文章中主要介绍了JVM的组成结构并且引出了垃圾回收,比如垃圾回收的判断,本文主要讲解常见的几种垃圾回收器以及垃圾回收算法.">
+<meta name="keywords" content="java基础">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JVM常用总结2之垃圾回收">
+<meta property="og:url" content="http://jonathanchang.top/2020/07/04/JVM常用总结2之垃圾回收/index.html">
+<meta property="og:site_name" content="Jonathan&#39;s blog">
+<meta property="og:description" content="上篇文章中主要介绍了JVM的组成结构并且引出了垃圾回收,比如垃圾回收的判断,本文主要讲解常见的几种垃圾回收器以及垃圾回收算法.">
+<meta property="og:locale" content="zh-CN">
+<meta property="og:image" content="http://jonathanchang.top/files/java/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png">
+<meta property="og:updated_time" content="2020-12-05T04:50:22.741Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="JVM常用总结2之垃圾回收">
+<meta name="twitter:description" content="上篇文章中主要介绍了JVM的组成结构并且引出了垃圾回收,比如垃圾回收的判断,本文主要讲解常见的几种垃圾回收器以及垃圾回收算法.">
+<meta name="twitter:image" content="http://jonathanchang.top/files/java/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png">
+
+
+
+<link rel="alternative" href="/atom.xml" title="JVM常用总结2之垃圾回收" type="application/atom+xml">
+
+
+
+<link rel="icon" href="/images/favicon.png">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/monokai-sublime.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="JVM常用总结2之垃圾回收" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">首页</a>
+                
+                <a class="navbar-item" href="/archives">归档</a>
+                
+                <a class="navbar-item" href="/categories">分类</a>
+                
+                <a class="navbar-item" href="/tags">标签</a>
+                
+                <a class="navbar-item" href="/about">关于</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="GitHub" href="http://github.com/jonathanzhan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                <a class="navbar-item is-hidden-tablet catalogue" title="目录" href="javascript:;">
+                    <i class="fas fa-list-ul"></i>
+                </a>
+                
+                
+                <a class="navbar-item search" title="搜索" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-07-04T09:35:05.000Z">2020-07-04</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    32 分钟 读完 (大约 4823 个字)
+                </span>
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                JVM常用总结2之垃圾回收
+            
+        </h1>
+        <div class="content">
+            <p>上篇文章中主要介绍了JVM的组成结构并且引出了垃圾回收,比如垃圾回收的判断,本文主要讲解常见的几种垃圾回收器以及垃圾回收算法.</p>
+<a id="more"></a>
+
+<h3 id="java垃圾回收机制"><a href="#java垃圾回收机制" class="headerlink" title="java垃圾回收机制"></a>java垃圾回收机制</h3><p>java语言最显著的特点就是引入了垃圾回收机制,使程序员在写代码的时候不用考虑内存管理的问题,程序员不需要显示的去释放一个对象的内存,而是由java虚拟机来自行执行.在JVM中,有一个垃圾回收的线程,它是最低优先级的,正常情况下不会执行,只有在虚拟机空闲或者当前堆内存不足的情况下,才会触发执行.它可以有效的防止内存泄漏.</p>
+<p>GC就是垃圾收集的意思,当程序员创建对象时,GC就开始监控这个对象的地址大小以及使用情况,当确定对象通过可达性分析算法是不可达时,GC就有责任回收这些对象的内存空间.当然也可以手动执行system.gc(),通知GC执行.</p>
+<h4 id="在java中-对象什么时候可以被垃圾回收"><a href="#在java中-对象什么时候可以被垃圾回收" class="headerlink" title="在java中,对象什么时候可以被垃圾回收"></a>在java中,对象什么时候可以被垃圾回收</h4><p>当对象对当前使用这个对应的应用程序变得不可触及的时候,也就是不可达的时候,这个对象就可以被回收了.</p>
+<p>垃圾回收不会发生在永久代,除非是永久代满了或者超过了临界值,才会触发完全垃圾回收full gc.</p>
+<h3 id="垃圾回收算法"><a href="#垃圾回收算法" class="headerlink" title="垃圾回收算法"></a>垃圾回收算法</h3><p>(1) 标记清除算法<br>标记存活的对象,统一回收所有未被标记的对象,也可以反着来,标记出所有需要回收的对象,在标记完成后统一回收标记的对象.它是最基础的收集算法,优点是实现简单,不需要对对象进行移动,但是有两个明显的问题:</p>
+<ul>
+<li>效率问题,如果需要标记的对象太多,效率不高</li>
+<li>空间问题,标记清除后会产生大量的不连续的碎片</li>
+</ul>
+<p>(2) 复制算法<br>为了解决效率问题,复制算法是将内存大小分为大小相同的两块,每次使用其中的一块,当这一块的内存空间使用完后,遍历当前的内存域,就将还存活的对象复制到另一块去,然后再把使用的空间一次清理掉,这样就使每次的内存回收都是对内存区间的一半做回收.</p>
+<p>优点:按顺序分配内存即可,实现简单,不用考虑内存碎片<br>缺点:可用的内存空间为原来的一半,对象存活率高时会频繁的进行复制.</p>
+<p>(3) 标记整理算法<br>在新生代中可以使用复制算法,但是在老年代中就不能选择复制算法了,因为老年代的对象存活率会很高,这样会有很多的复制操作,导致效率很低.标记清除算法可以用到老年代,但是它效率不高,而且容易产生大量的碎片.<br>标记整理算法是在标记可回收对象后,将所有的存活对象移动到内存的一端,让他们紧凑得的排列在一起,然后对边界以外的内存进行回收,回收后,已使用的内存和未使用的内存都是各自一边.</p>
+<p>优点:解决了标记清除算法中的内存碎片问题<br>缺点:仍然需要对对象进行移动,一定程度上效率不高.</p>
+<p>(4) 分代收集算法<br>当前的商业虚拟机都是采用了分代手机的垃圾收集算法,分代收集,就是根据对象的存活周期将内存划分为几块,一般包括年轻代,老年代和永久代,然后根据每个年代的特点选择合适的垃圾收集算法.<br>比如在新生代,每次收集都会有大量的对象死去,就可以选择复制算法,只需要付出少量对象的复制成本就可以完成每次垃圾收集.<br>而老年代的对象存活率比较高,并且没有额外的空间给它进行分配,所以必须选择标记清除或者标记整理算法.</p>
+<h3 id="垃圾收集器"><a href="#垃圾收集器" class="headerlink" title="垃圾收集器"></a>垃圾收集器</h3><p>如果说垃圾收集算法是内存回收的方法论,那么垃圾收集器就是对内存回收的具体实现.<br>如下图所示<br><img src="/files/java/%E5%9E%83%E5%9C%BE%E6%94%B6%E9%9B%86%E5%99%A8.png" alt="垃圾收集器"></p>
+<p>其中用于回收新生代的收集器包括Serial,parNew,Parallel,回收老年代的垃圾收集器包括Serial old,Parallel Old,CMS,还有用户回收整个java堆的G1和ZGC收集器.</p>
+<h4 id="Serial收集器-XX-UseSerialGC-XX-UseSerialOldGC"><a href="#Serial收集器-XX-UseSerialGC-XX-UseSerialOldGC" class="headerlink" title="Serial收集器(-XX:+UseSerialGC -XX:+UseSerialOldGC)"></a>Serial收集器(-XX:+UseSerialGC -XX:+UseSerialOldGC)</h4><p>Serial收集器是一个单线程的收集器,单线程不仅仅意味着它只会使用一条垃圾收集线程去完成垃圾回收工作,更重要的是它在进行垃圾收集工作的时候必须暂停其他的所有工作线程(stop the world),知道它收集结束.</p>
+<p>新生代采用的是复制算法,老年代采用的是标记整理算法</p>
+<h4 id="Paraller收集器-XX-UseParallelGC-XX-UseParallelOldGC"><a href="#Paraller收集器-XX-UseParallelGC-XX-UseParallelOldGC" class="headerlink" title="Paraller收集器(-XX:+UseParallelGC -XX:+UseParallelOldGC)"></a>Paraller收集器(-XX:+UseParallelGC -XX:+UseParallelOldGC)</h4><p>parallel收集器其实就是serial收集器的多线程版本,默认的收集线程数跟CPU的核数相同.<br>它的关注点是吞吐量,能高效率的利用CPU.吞吐量=用户线程时间/(用户线程时间+GC线程时间),使用后台应用等对交互响应要求不高的场景.同样也会STW</p>
+<p>新生代采用复制算法,老年代采用标记整理算法.</p>
+<h4 id="ParNew收集器-XX-UseParNewGC"><a href="#ParNew收集器-XX-UseParNewGC" class="headerlink" title="ParNew收集器(-XX:+UseParNewGC)"></a>ParNew收集器(-XX:+UseParNewGC)</h4><p>parNew收集器其实和paraller收集器很类似,区别主要是他可以和CMS收集器配合使用,新生代采用复制算法.</p>
+<h4 id="CMS收集器-XX-UseConcMarkSweepGC"><a href="#CMS收集器-XX-UseConcMarkSweepGC" class="headerlink" title="CMS收集器(-XX:+UseConcMarkSweepGC)"></a>CMS收集器(-XX:+UseConcMarkSweepGC)</h4><p>CMS收集器是一种以获取最短回收停顿为目标的收集器.它非常符合在注重用户体验的应用上使用.它使用的是标记清除算法,整个过程分为四个步骤:</p>
+<ul>
+<li>初始标记:暂时所有的其他线程(STW),并记录下GC ROOTS直接引用的对象,速度很快.</li>
+<li>并发标记:并发标记就是从GC ROOTS的直接关联对象开始遍历整个对象图的过程,这个过程耗时较长,但是不需要停顿用户线程,可以与垃圾收集线程一起并发运行,因为用户线程继续运行,可能会导致已经标记过的对象状态发生改变</li>
+<li>重新标记:重新标记时为了修正并发标记期间因为用户线程继续运行而导致标记产生变动的那一部分对象的标记记录,这个阶段的停顿时间一般会比初始标记的停顿时间稍长,远远比并发标记的时间段.主要用到了三色标记里的增量算法做重新标记.会STW</li>
+<li>并发清理:开启用户线程,同时GC线程开始对未标记的区域做清理,这个阶段如果有新增的对象会被标记为黑色,但是不做任何处理.</li>
+<li>并发重置:重置本次GC过程的标记数据.</li>
+</ul>
+<p>它的主要优点是并发收集,低停顿,缺点是:</p>
+<ul>
+<li>对CPU资源敏感,会和服务抢资源</li>
+<li>无法处理浮动垃圾(在并发标记和并发清理阶段又产生了垃圾,只能等下一次GC操作)</li>
+<li>使用的标记清除算法会产生大量的空间碎片,当然可以通过设置参数<code>-XX:+UseCMSCompactAtFullCollection</code>让JVM在执行完标记清除后,再做整理</li>
+<li>执行过程中的不确定性,会存在上一次垃圾回收还未执行完,然后垃圾回收又被处罚的情况,特别是并发标记和并发清理阶段会出现一边回收,系统一边运行,也许还没回收完,就触发了full gc,此时会进入STW,用Serial old垃圾收集器来回收.</li>
+</ul>
+<p>CMS相关的核心参数</p>
+<ul>
+<li>-XX:+UseConcMarkSweepGC:启用cms</li>
+<li>-XX:ConcGCThreads：并发的GC线程数</li>
+<li>-XX:+UseCMSCompactAtFullCollection:FullGC之后做压缩整理（减少碎片）</li>
+<li>-XX:CMSFullGCsBeforeCompaction:多少次FullGC之后压缩一次，默认是0，代表每次FullGC后都会压缩一次</li>
+<li>-XX:CMSInitiatingOccupancyFraction: 当老年代使用达到该比例时会触发FullGC（默认是92，这是百分比）</li>
+<li>-XX:+UseCMSInitiatingOccupancyOnly：只使用设定的回收阈值(-XX:CMSInitiatingOccupancyFraction设定的值)，如果不指定，JVM仅在第一次使用设定值，后续则会自动调整</li>
+<li>-XX:+CMSScavengeBeforeRemark：在CMS GC前启动一次minor gc，降低CMS GC标记阶段(也会对年轻代一起做标记，如果在minor gc就干掉了很多对垃圾对象，标记阶段就会减少一些标记时间)时的开销，一般CMS的GC耗时 80%都在标记阶段</li>
+<li>-XX:+CMSParallellnitialMarkEnabled：表示在初始标记的时候多线程执行，缩短STW</li>
+<li>-XX:+CMSParallelRemarkEnabled：在重新标记的时候多线程执行，缩短STW;</li>
+</ul>
+<h4 id="三色标记"><a href="#三色标记" class="headerlink" title="三色标记"></a>三色标记</h4><p>在并发标记的过程中,因为用户线程还在使用,对象间的引用关系可能发生变化,多表和漏表的情况就有可能发生.<br>三色标记把gc roots可达性分析遍历对象过程中遇到的对象按照<code>是否访问过</code>这个条件标记为三种颜色</p>
+<ul>
+<li>黑色:表示对象已经被垃圾收集器访问过,且这个对象所有的引用都被扫描过.黑色对象代表已经扫描过,它是安全存活的,如果有其他对象引用指向了黑色对象,无须再重新扫描,黑色对象不可能直接不经过灰色对象指向到某个白色对象</li>
+<li>灰色:表示对象已经被访问过,但是这个对象上至少存在一个引用还未被扫描过</li>
+<li>白色:表示对象还未被垃圾收集器访问过,显然在可达性分析刚刚开始的阶段,所有的对象都是白色的,在分析结束阶段,如果仍然是白色的独享,即代表不可达.</li>
+</ul>
+<h4 id="G1收集器-XX-UseG1GC"><a href="#G1收集器-XX-UseG1GC" class="headerlink" title="G1收集器(-XX:UseG1GC)"></a>G1收集器(-XX:UseG1GC)</h4><p>G1是一款面向服务器的垃圾收集器,主要针对配备多颗处理器以及大容量内存的机器,以极高的效率满足GC停顿时间要求的同时,还具备高吞吐量的特征.它是基于标记整理算法,不会产生内存碎片,并且不同于其他的垃圾收集器,G1回收的范围是整个JAVA堆(包括新生代,老年代).</p>
+<p>G1将java堆分为多个大小相等的独立区域(region),一般是不超过2048个.一般region的大小等于堆大小除region数量2048</p>
+<p>G1保留了年轻代和老年代的概念,单不再是物理隔阂了,它们都可以是不连续的region集合.<br>默认年轻代对堆内存的占比为5%,在系统运行过程中会不停的给年轻代增加更多的region,但是最多新生代不会超过60%(默认,可以设置),年轻代中的eden,survivor和之前一样,按照8:1:1,一个region可能之前是年轻代,如果region进行了垃圾回收,可能又会变成老年代.</p>
+<p>G1垃圾收集器对于对象什么时候会转移到老年代跟之前讲过的原则一样，唯一不同的是对大对象的处理，G1有专门分配大对象的Region叫Humongous区，而不是让大对象直接进入老年代的Region中。在G1中，大对象的判定规则就是一个大对象超过了一个Region大小的50%，比如每个Region是2M，只要一个大对象超过了1M，就会被放入Humongous中，而且一个大对象如果太大，可能会横跨多个Region来存放。</p>
+<p>Full GC的时候除了收集年轻代和老年代之外，也会将Humongous区一并回收。</p>
+<p>G1收集器一次GC(主要指Mixed GC)的运作过程大致分为以下几个步骤</p>
+<ul>
+<li>初始标记(STW):暂停所有其他线程,并记录下gc roots能直接引用的对象,速度很快</li>
+<li>并发标记:与CMS的并发标记类似</li>
+<li>最终标记(STW):同CMS的重新标记</li>
+<li>筛选回收(STW):筛选回收阶段首先对各个region的回收价值和成本进行排序,根据用户所期望的GC停顿STW时间来指定回收计划,比如老年代有1000个region都满了,但是因为预期停顿时间,本次垃圾回收可能只能停顿200毫秒,通过之前的回收成本计算,本次回收可能需要回收其中的500个.回收算法主要用的是复制算法,将一个region中的存活对象复制到另一个region中,不会像CMS那样回收完有很多垃圾碎片还需要整理一次.注意CMS回收阶段是跟用户线程并发执行的,G1因为内部实现太复杂并没有实现并发回收.</li>
+</ul>
+<p>G1收集器在后台线程中维护了一个有限列表,每次根据允许的收集时间,优选选择回收价值最大的region.比如一个region,花100ms可以回收10M的垃圾,另外一个花50ms能回收20M的垃圾,在回收时间有限的情况下,当然选择后面一个region回收.</p>
+<p>G1默认的停顿时间为200ms,当然可以设置,如果设置的停顿时间比较短,就会导致每次回收的垃圾占堆内存的很小一部分,导致垃圾慢慢积累,最终导致full gc</p>
+<h5 id="G1垃圾收集分类"><a href="#G1垃圾收集分类" class="headerlink" title="G1垃圾收集分类"></a>G1垃圾收集分类</h5><ul>
+<li><p>YoungGC:YoungGC并不是说现有的Eden区放满了就会马上触发，G1会计算下现在Eden区回收大概要多久时间，如果回收时间远远小于参数 -XX:MaxGCPauseMills 设定的值，那么增加年轻代的region，继续给新对象存放，不会马上做Young GC，直到下一次Eden区放满，G1计算回收时间接近参数 -XX:MaxGCPauseMills 设定的值，那么就会触发Young GC</p>
+</li>
+<li><p>MixedGC:不是FullGC，老年代的堆占有率达到参数(-XX:InitiatingHeapOccupancyPercent)设定的值则触发，回收所有的Young和部分Old(根据期望的GC停顿时间确定old区垃圾收集的优先顺序)以及大对象区，正常情况G1的垃圾收集是先做MixedGC，主要使用复制算法，需要把各个region中存活的对象拷贝到别的region里去，拷贝过程中如果发现没有足够的空region能够承载拷贝对象就会触发一次Full GC</p>
+</li>
+<li><p>Full GC:停止系统程序，然后采用单线程进行标记、清理和压缩整理，好空闲出来一批Region来供下一次MixedGC使用，这个过程是非常耗时的</p>
+</li>
+</ul>
+<h5 id="什么场景适合使用G1"><a href="#什么场景适合使用G1" class="headerlink" title="什么场景适合使用G1"></a>什么场景适合使用G1</h5><ul>
+<li>50%以上的堆被存活对象占用</li>
+<li>对象分配和晋升的速度变化非常大</li>
+<li>垃圾回收时间特别长，超过1秒</li>
+<li>8GB以上的堆内存(建议值)</li>
+<li>停顿时间是500ms以内</li>
+</ul>
+<h3 id="JVM调优"><a href="#JVM调优" class="headerlink" title="JVM调优"></a>JVM调优</h3><h4 id="JVM调优的工具"><a href="#JVM调优的工具" class="headerlink" title="JVM调优的工具"></a>JVM调优的工具</h4><p>JDK自带了很多监控工具,最常用的是jvisualvm和jconsole,还有阿里开源的arthas</p>
+<ul>
+<li>jvisualvm jdk自带的全能分析工具,可以分析内存快照,线程快照,程序死锁,监控内存的变化,gc变化等</li>
+<li>jconsole 用于对JVM中的内存,线程和类进行监控</li>
+</ul>
+<h4 id="常用的JVM调优参数"><a href="#常用的JVM调优参数" class="headerlink" title="常用的JVM调优参数"></a>常用的JVM调优参数</h4><ul>
+<li>-Xms2g: 初始化堆大小为2G</li>
+<li>-Xmx2g: 堆最大内存为2G</li>
+<li>-Xmn512M: 年轻代大小为512M</li>
+<li>-Xss256K:线程栈内存大小为256k</li>
+<li>-XX:NewRatio=4: 设置年轻和老年代的内存比例为1:4</li>
+<li>-XX:SurvivorRatio=8: 设置新生代eden和survivor区的比例为8:2</li>
+<li>-XX:+UseParNewGC: 指定使用parnew+serial old组合垃圾回收期</li>
+<li>-XX:+UseParallelOldGC: 指定使用Parnew+ parnew old垃圾回收期</li>
+<li>-XX:+UseConcMarkSweepGC:指定使用serial+cms垃圾回收期组合</li>
+<li>-XX:+PrintGC:开启打印GC信息</li>
+<li>-XX:+PrintGCDetail: 打印GC相信信息</li>
+<li>-XX:+HeapDumpOnOutOfMemoryError:当内存溢出时打印dump信息</li>
+<li>-XX:+HeapDumpPath = ./test.dump:dump文件打印输出位置</li>
+</ul>
+<h4 id="常用的JVM调优命令"><a href="#常用的JVM调优命令" class="headerlink" title="常用的JVM调优命令"></a>常用的JVM调优命令</h4><ul>
+<li>jps: 查看java进程ID</li>
+<li>jmap -histo pid &gt; ./log.txt: 查看历史生成的实例,并存放到文件中</li>
+<li>jmap -histo:live pid :查看当前存活的实例</li>
+<li>jmap -heap pid: 查看堆信息</li>
+<li>jmap -dump:format=b,file=test.hprof pid:查看堆内存信息,并输出到test.hprof文件中,可以导入jvisualvm中查看.</li>
+<li>jstack pid:查找死锁</li>
+<li>top -p pid:显示java进程的内存情况,按H可以获取每个线程的内存情况,找到内存和CPU最高的线程ID,转换为十六进制,执行jstack pid|grep -A 10 十六进制:获取这个线程所在行的后面10行堆栈信息</li>
+<li>jinfo -flags pid:查看java应用程序的扩展参数</li>
+<li>jinfo -sysprops pid:查看java系统参数</li>
+<li>jstat [-命令选项] [vmid] [间隔时间毫秒] [查询次数]:查看堆内存各部分的使用信息</li>
+<li>jstat -gc pid 1000 10:查询当前进程内存使用及GC压力情况,每个1秒查询一次,总共查询10次</li>
+</ul>
+<h4 id="JVM运行情况预估"><a href="#JVM运行情况预估" class="headerlink" title="JVM运行情况预估"></a>JVM运行情况预估</h4><p>用<code>jstat -gc pid [间隔时间毫秒] [查询次数]</code>命令可以计算出如下一些关键数据,有了这些数据,就可以设置一些初始的JVM参数,比如堆内存大小,年轻代大小,eden和survivor比例,老年代大小,大对象的阈值,大龄对象进行老年代的阈值等.</p>
+<p>根据这个命令,我们可以计算出年轻代增加速率,然后根据eden区大小,就可以计算出大概多久young gc一次.<br>同时我们可以重新设置间隔时间=young gc的时间,可以看出每次young gc中的eden区,survivor区,老年代的内存使用情况,从而可以推算出老年代对象的增长速率.</p>
+<p>知道了老年代的增长速率,根据老年代空间大小,就可以计算出大概多久触发一次full gc.</p>
+<p>JVM优化的思路就是尽量让每次young gc后存活的对象小于survivor区的50%,都留在年轻代里.尽量别让对象进入老年代,减少full gc的频率.</p>
+<h4 id="一些常用的JVM参数设置"><a href="#一些常用的JVM参数设置" class="headerlink" title="一些常用的JVM参数设置"></a>一些常用的JVM参数设置</h4><figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Xms1536M -Xmx1536M -Xmn1024M -Xss256K -XX:SurvivorRatio=6  -XX:MetaspaceSize=256M -XX:MaxMetaspaceSize=256M </span><br><span class="line">-XX:+UseParNewGC  -XX:+UseConcMarkSweepGC  -XX:CMSInitiatingOccupancyFraction=92 -XX:+UseCMSInitiatingOccupancyOnly</span><br></pre></td></tr></table></figure>
+
+<p>GC日志详情</p>
+<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">-Xloggc:./gc-%t.log -XX:+PrintGCDetails -XX:+PrintGCDateStamps  -XX:+PrintGCTimeStamps -XX:+PrintGCCause  </span><br><span class="line">-XX:+UseGCLogFileRotation -XX:NumberOfGCLogFiles=10 -XX:GCLogFileSize=100M</span><br></pre></td></tr></table></figure>
+
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/java基础/">java基础</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        <div class="social-share"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/css/share.min.css">
+<script src="https://cdn.jsdelivr.net/npm/social-share.js@1.0.16/dist/js/social-share.min.js"></script>
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/07/07/JVM常用总结3之常量池/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">JVM常用总结3之常量池</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/07/02/JVM常用总结1之JVM组成/">
+                <span class="level-item">JVM常用总结1之JVM组成</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">评论</h3>
+        
+<div id="comment-container"></div>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.4.1/dist/gitalk.min.js"></script>
+<script>
+    var gitalk = new Gitalk({
+        clientID: '422042c69d84f3ef6d0d',
+        clientSecret: '053297d6d21b8963844801733df8e21c64adbae0',
+        id: 'f8c8c4d279bce276b7bcd9b0ce1df335',
+        repo: 'jonathanzhan.github.io',
+        owner: 'jonathanzhan',
+        admin: "jonathanzhan"
+    })
+    gitalk.render('comment-container')
+</script>
+
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered">
+                <div>
+                    <img class="image is-128x128 has-mb-6" style="border-radius: 50%;" src="/images/avatar.jpg" alt="Jonathan">
+                    
+                    <p class="is-size-4 is-block">
+                        Jonathan
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block">
+                        Java Web Developer &amp; Programmer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Xi&#39;An, China</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        85
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分类
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        12
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        标签
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        24
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <div class="level">
+            <a class="level-item button is-link is-rounded" href="http://github.com/jonathanzhan">
+                关注我</a>
+        </div>
+        
+        
+        <div class="level is-mobile">
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Github" href="http://github.com/jonathanzhan">
+                
+                <i class="fab fa-github"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Gitee" href="http://git.oschina.net/jonathanchang">
+                
+                <i class="fab fa-git-square"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="Twitter" href="https://twitter.com/jonathan_zhan">
+                
+                <i class="fab fa-twitter"></i>
+                
+            </a>
+            
+            <a class="level-item button is-white is-marginless" target="_blank" title="RSS" href="/atom.xml">
+                
+                <i class="fas fa-rss"></i>
+                
+            </a>
+            
+        </div>
+        
+    </div>
+</div>
+
+    
+        
+<div class="card widget" id="toc">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                目录
+            </h3>
+            <ul class="menu-list"><li>
+        <a class="is-flex" href="#java垃圾回收机制">
+        <span class="has-mr-6">1</span>
+        <span>java垃圾回收机制</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#在java中-对象什么时候可以被垃圾回收">
+        <span class="has-mr-6">1.1</span>
+        <span>在java中,对象什么时候可以被垃圾回收</span>
+        </a></li></ul></li><li>
+        <a class="is-flex" href="#垃圾回收算法">
+        <span class="has-mr-6">2</span>
+        <span>垃圾回收算法</span>
+        </a></li><li>
+        <a class="is-flex" href="#垃圾收集器">
+        <span class="has-mr-6">3</span>
+        <span>垃圾收集器</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#Serial收集器-XX-UseSerialGC-XX-UseSerialOldGC">
+        <span class="has-mr-6">3.1</span>
+        <span>Serial收集器(-XX:+UseSerialGC -XX:+UseSerialOldGC)</span>
+        </a></li><li>
+        <a class="is-flex" href="#Paraller收集器-XX-UseParallelGC-XX-UseParallelOldGC">
+        <span class="has-mr-6">3.2</span>
+        <span>Paraller收集器(-XX:+UseParallelGC -XX:+UseParallelOldGC)</span>
+        </a></li><li>
+        <a class="is-flex" href="#ParNew收集器-XX-UseParNewGC">
+        <span class="has-mr-6">3.3</span>
+        <span>ParNew收集器(-XX:+UseParNewGC)</span>
+        </a></li><li>
+        <a class="is-flex" href="#CMS收集器-XX-UseConcMarkSweepGC">
+        <span class="has-mr-6">3.4</span>
+        <span>CMS收集器(-XX:+UseConcMarkSweepGC)</span>
+        </a></li><li>
+        <a class="is-flex" href="#三色标记">
+        <span class="has-mr-6">3.5</span>
+        <span>三色标记</span>
+        </a></li><li>
+        <a class="is-flex" href="#G1收集器-XX-UseG1GC">
+        <span class="has-mr-6">3.6</span>
+        <span>G1收集器(-XX:UseG1GC)</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#G1垃圾收集分类">
+        <span class="has-mr-6">3.6.1</span>
+        <span>G1垃圾收集分类</span>
+        </a></li><li>
+        <a class="is-flex" href="#什么场景适合使用G1">
+        <span class="has-mr-6">3.6.2</span>
+        <span>什么场景适合使用G1</span>
+        </a></li></ul></li></ul></li><li>
+        <a class="is-flex" href="#JVM调优">
+        <span class="has-mr-6">4</span>
+        <span>JVM调优</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#JVM调优的工具">
+        <span class="has-mr-6">4.1</span>
+        <span>JVM调优的工具</span>
+        </a></li><li>
+        <a class="is-flex" href="#常用的JVM调优参数">
+        <span class="has-mr-6">4.2</span>
+        <span>常用的JVM调优参数</span>
+        </a></li><li>
+        <a class="is-flex" href="#常用的JVM调优命令">
+        <span class="has-mr-6">4.3</span>
+        <span>常用的JVM调优命令</span>
+        </a></li><li>
+        <a class="is-flex" href="#JVM运行情况预估">
+        <span class="has-mr-6">4.4</span>
+        <span>JVM运行情况预估</span>
+        </a></li><li>
+        <a class="is-flex" href="#一些常用的JVM参数设置">
+        <span class="has-mr-6">4.5</span>
+        <span>一些常用的JVM参数设置</span>
+        </a></li></ul></li></ul>
+        </div>
+    </div>
+</div>
+
+    
+        
+
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            链接
+        </h3>
+        <ul class="menu-list">
+        
+            <li>
+                <a class="level is-mobile" href="https://www.gitbook.com/jonathanzhan" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">GitBook</span>
+                    </span>
+                    <!--<span class="level-right">-->
+                        <!--<span class="level-item tag">www.gitbook.com</span>-->
+                    <!--</span>-->
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="http://es6.ruanyifeng.com" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">ECMAScript6入门</span>
+                    </span>
+                    <!--<span class="level-right">-->
+                        <!--<span class="level-item tag">es6.ruanyifeng.com</span>-->
+                    <!--</span>-->
+                </a>
+            </li>
+        
+            <li>
+                <a class="level is-mobile" href="https://blog.csdn.net/whatlookingfor" target="_blank">
+                    <span class="level-left">
+                        <span class="level-item">CSDN</span>
+                    </span>
+                    <!--<span class="level-right">-->
+                        <!--<span class="level-item tag">blog.csdn.net</span>-->
+                    <!--</span>-->
+                </a>
+            </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分类
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Java/">
+            <span class="level-start">
+                <span class="level-item">Java</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Spring/">
+            <span class="level-start">
+                <span class="level-item">Spring</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/activiti/">
+            <span class="level-start">
+                <span class="level-item">activiti</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">12</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/java/">
+            <span class="level-start">
+                <span class="level-item">java</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">21</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/前端设计/">
+            <span class="level-start">
+                <span class="level-item">前端设计</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">4</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/奇文共赏/">
+            <span class="level-start">
+                <span class="level-item">奇文共赏</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/建站/">
+            <span class="level-start">
+                <span class="level-item">建站</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/微服务/">
+            <span class="level-start">
+                <span class="level-item">微服务</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">3</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/数据库/">
+            <span class="level-start">
+                <span class="level-item">数据库</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">9</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/框架整合/">
+            <span class="level-start">
+                <span class="level-item">框架整合</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/设计模式/">
+            <span class="level-start">
+                <span class="level-item">设计模式</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">8</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/运维实施/">
+            <span class="level-start">
+                <span class="level-item">运维实施</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">13</span>
+            </span>
+        </a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            标签云
+        </h3>
+        <a href="/tags/Spring/" style="font-size: 11.25px;">Spring</a> <a href="/tags/Spring-core/" style="font-size: 10px;">Spring core</a> <a href="/tags/SpringBoot/" style="font-size: 12.5px;">SpringBoot</a> <a href="/tags/SpringMvc/" style="font-size: 11.25px;">SpringMvc</a> <a href="/tags/UML/" style="font-size: 10px;">UML</a> <a href="/tags/activiti/" style="font-size: 20px;">activiti</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/hexo/" style="font-size: 10px;">hexo</a> <a href="/tags/java基础/" style="font-size: 17.5px;">java基础</a> <a href="/tags/jstl/" style="font-size: 10px;">jstl</a> <a href="/tags/linux/" style="font-size: 18.75px;">linux</a> <a href="/tags/markdown/" style="font-size: 10px;">markdown</a> <a href="/tags/maven/" style="font-size: 12.5px;">maven</a> <a href="/tags/mybatis/" style="font-size: 10px;">mybatis</a> <a href="/tags/mysql/" style="font-size: 16.25px;">mysql</a> <a href="/tags/node/" style="font-size: 13.75px;">node</a> <a href="/tags/oracle/" style="font-size: 13.75px;">oracle</a> <a href="/tags/redis/" style="font-size: 15px;">redis</a> <a href="/tags/thymeleaf/" style="font-size: 15px;">thymeleaf</a> <a href="/tags/windows/" style="font-size: 10px;">windows</a> <a href="/tags/zookeeper/" style="font-size: 12.5px;">zookeeper</a> <a href="/tags/开发工具/" style="font-size: 10px;">开发工具</a> <a href="/tags/设计模式/" style="font-size: 17.5px;">设计模式</a> <a href="/tags/闲谈/" style="font-size: 10px;">闲谈</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/07/07/JVM常用总结3之常量池/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结3之常量池">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-07T05:35:05.000Z">2020-07-07</time></div>
+                    <a href="/2020/07/07/JVM常用总结3之常量池/" class="has-link-black-ter is-size-6">JVM常用总结3之常量池</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/04/JVM常用总结2之垃圾回收/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结2之垃圾回收">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-04T09:35:05.000Z">2020-07-04</time></div>
+                    <a href="/2020/07/04/JVM常用总结2之垃圾回收/" class="has-link-black-ter is-size-6">JVM常用总结2之垃圾回收</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/02/JVM常用总结1之JVM组成/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结1之JVM组成">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-02T09:15:03.000Z">2020-07-02</time></div>
+                    <a href="/2020/07/02/JVM常用总结1之JVM组成/" class="has-link-black-ter is-size-6">JVM常用总结1之JVM组成</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/23/mysql日期时间类型/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="mysql日期时间类型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-23T08:04:35.000Z">2020-05-23</time></div>
+                    <a href="/2020/05/23/mysql日期时间类型/" class="has-link-black-ter is-size-6">mysql日期时间类型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/数据库/">数据库</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/29/java动态代理InvocationHandler和Proxy详解/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java动态代理InvocationHandler和Proxy详解">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T07:52:40.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/java动态代理InvocationHandler和Proxy详解/" class="has-link-black-ter is-size-6">java动态代理InvocationHandler和Proxy详解</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/java/">java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">12</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2015/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2015</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2014/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2014</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spring/">
+                        <span class="tag">Spring</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spring-core/">
+                        <span class="tag">Spring core</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/SpringBoot/">
+                        <span class="tag">SpringBoot</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/SpringMvc/">
+                        <span class="tag">SpringMvc</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/UML/">
+                        <span class="tag">UML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/activiti/">
+                        <span class="tag">activiti</span>
+                        <span class="tag is-grey">12</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/java基础/">
+                        <span class="tag">java基础</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jstl/">
+                        <span class="tag">jstl</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/linux/">
+                        <span class="tag">linux</span>
+                        <span class="tag is-grey">11</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/markdown/">
+                        <span class="tag">markdown</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/maven/">
+                        <span class="tag">maven</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mybatis/">
+                        <span class="tag">mybatis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mysql/">
+                        <span class="tag">mysql</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/node/">
+                        <span class="tag">node</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/oracle/">
+                        <span class="tag">oracle</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/redis/">
+                        <span class="tag">redis</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/thymeleaf/">
+                        <span class="tag">thymeleaf</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/windows/">
+                        <span class="tag">windows</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/zookeeper/">
+                        <span class="tag">zookeeper</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/开发工具/">
+                        <span class="tag">开发工具</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/设计模式/">
+                        <span class="tag">设计模式</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/闲谈/">
+                        <span class="tag">闲谈</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/07/07/JVM常用总结3之常量池/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结3之常量池">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-07T05:35:05.000Z">2020-07-07</time></div>
+                    <a href="/2020/07/07/JVM常用总结3之常量池/" class="has-link-black-ter is-size-6">JVM常用总结3之常量池</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/04/JVM常用总结2之垃圾回收/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结2之垃圾回收">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-04T09:35:05.000Z">2020-07-04</time></div>
+                    <a href="/2020/07/04/JVM常用总结2之垃圾回收/" class="has-link-black-ter is-size-6">JVM常用总结2之垃圾回收</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/07/02/JVM常用总结1之JVM组成/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JVM常用总结1之JVM组成">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-02T09:15:03.000Z">2020-07-02</time></div>
+                    <a href="/2020/07/02/JVM常用总结1之JVM组成/" class="has-link-black-ter is-size-6">JVM常用总结1之JVM组成</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Java/">Java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2020/05/23/mysql日期时间类型/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="mysql日期时间类型">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-05-23T08:04:35.000Z">2020-05-23</time></div>
+                    <a href="/2020/05/23/mysql日期时间类型/" class="has-link-black-ter is-size-6">mysql日期时间类型</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/数据库/">数据库</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2019/08/29/java动态代理InvocationHandler和Proxy详解/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="java动态代理InvocationHandler和Proxy详解">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-08-29T07:52:40.000Z">2019-08-29</time></div>
+                    <a href="/2019/08/29/java动态代理InvocationHandler和Proxy详解/" class="has-link-black-ter is-size-6">java动态代理InvocationHandler和Proxy详解</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/java/">java</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            归档
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2020/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2020</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2018/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2018</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">3</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2017/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2017</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/11/">
+                <span class="level-start">
+                    <span class="level-item">十一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">12</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/08/">
+                <span class="level-start">
+                    <span class="level-item">八月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">7</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/06/">
+                <span class="level-start">
+                    <span class="level-item">六月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">5</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">6</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/04/">
+                <span class="level-start">
+                    <span class="level-item">四月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">4</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2016/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2016</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2015/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2015</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2014/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2014</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                标签
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spring/">
+                        <span class="tag">Spring</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/Spring-core/">
+                        <span class="tag">Spring core</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/SpringBoot/">
+                        <span class="tag">SpringBoot</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/SpringMvc/">
+                        <span class="tag">SpringMvc</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/UML/">
+                        <span class="tag">UML</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/activiti/">
+                        <span class="tag">activiti</span>
+                        <span class="tag is-grey">12</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/hexo/">
+                        <span class="tag">hexo</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/java基础/">
+                        <span class="tag">java基础</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/jstl/">
+                        <span class="tag">jstl</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/linux/">
+                        <span class="tag">linux</span>
+                        <span class="tag is-grey">11</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/markdown/">
+                        <span class="tag">markdown</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/maven/">
+                        <span class="tag">maven</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mybatis/">
+                        <span class="tag">mybatis</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/mysql/">
+                        <span class="tag">mysql</span>
+                        <span class="tag is-grey">7</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/node/">
+                        <span class="tag">node</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/oracle/">
+                        <span class="tag">oracle</span>
+                        <span class="tag is-grey">4</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/redis/">
+                        <span class="tag">redis</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/thymeleaf/">
+                        <span class="tag">thymeleaf</span>
+                        <span class="tag is-grey">6</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/windows/">
+                        <span class="tag">windows</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/zookeeper/">
+                        <span class="tag">zookeeper</span>
+                        <span class="tag is-grey">3</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/开发工具/">
+                        <span class="tag">开发工具</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/设计模式/">
+                        <span class="tag">设计模式</span>
+                        <span class="tag is-grey">8</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/闲谈/">
+                        <span class="tag">闲谈</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <!--<a class="footer-logo is-block has-mb-6" href="/">-->
+                <!---->
+                    <!--<img src="/images/logo.png" alt="JVM常用总结2之垃圾回收" height="28">-->
+                <!---->
+                <!--</a>-->
+                <p class="is-size-7">
+                &copy; 2020 Jonathan&nbsp;
+                Powered by <a href="http://hexo.io/" target="_blank">Hexo</a> & <a href="http://github.com/ppoffice/hexo-theme-icarus">Icarus</a>
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="GitHub" href="http://github.com/jonathanzhan">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-CN");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {matchFontHeight: false},
+        SVG: {matchFontHeight: false},
+        CommonHTML: {matchFontHeight: false}
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到顶端" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="想要查找什么...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '页面',
+                CATEGORIES: '分类',
+                TAGS: '标签',
+                UNTITLED: '(无标题)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
